@@ -13,9 +13,6 @@ public class ProjectConfig {
   @Value("${spring.datasource.url}")
   private String dataSourceUrl;
   
-  @Value("${port}")
-  private String dataSourcePort;
-  
   @Value("${spring.datasource.username}")
   private String dataSourceUsername;
   

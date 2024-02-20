@@ -18,19 +18,31 @@ public class UserRepository {
   }
   
   public List<User> getAllUsers(){
-    String query = "SELECT * FROM user;";
-    return jdbc.query(query, getUserRowMapper());
+    String sql = "SELECT * FROM user;";
+    return jdbc.query(sql, getUserRowMapper());
   }
   
   public User getUserById(String id){
-    String query = "SELECT * FROM user WHERE id= ?";
-    User userById = jdbc.queryForObject(query, getUserRowMapper(), id );
+    String sql = "SELECT * FROM user WHERE id= ?";
+    User userById = jdbc.queryForObject(sql, getUserRowMapper(), id );
     return userById;
   }
   
+  public void addUser(User user){
+    String sql = "INSERT INTO user (username, password, role)" +
+            " VALUES ( ?, ?, ?)";
+    
+    jdbc.update(sql,
+            user.getUsername(),
+            user.getPassword(),
+            user.getRole());
+  }
+  
+  
+  
   private RowMapper<User> getUserRowMapper(){
     RowMapper<User> userRowMapper = (resultSet, i) -> {
-      User rowObject = new User();
+      User rowObject = new User("", "","");
       rowObject.setId(resultSet.getInt("id"));
       rowObject.setUserName(resultSet.getString("username"));
       rowObject.setPassword(resultSet.getString("password"));

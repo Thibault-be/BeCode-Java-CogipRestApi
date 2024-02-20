@@ -24,4 +24,8 @@ public class UserService {
     return this.userRepository.getUserById(id);
   }
   
+  public void addUser(User user){
+    this.userRepository.addUser(user);
+  }
+  
 }
