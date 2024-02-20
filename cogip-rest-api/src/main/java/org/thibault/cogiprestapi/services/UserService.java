@@ -20,4 +20,8 @@ public class UserService {
     return this.userRepository.getAllUsers();
   }
   
+  public User getUserById(String id){
+    return this.userRepository.getUserById(id);
+  }
+  
 }

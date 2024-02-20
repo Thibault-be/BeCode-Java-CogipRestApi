@@ -1,10 +1,8 @@
 package org.thibault.cogiprestapi.controllers;
 
+import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -18,11 +16,13 @@ public class UserController {
     this.userService = userService;
   }
   
-  
   @GetMapping ("/users")
   public List<User> getAllUsers(){
     return this.userService.getAllUsers();
   }
   
-  
+  @GetMapping ("/users/{id}")
+  public User getUserById(@PathVariable String id){
+    return this.userService.getUserById(id);
+  }
 }
