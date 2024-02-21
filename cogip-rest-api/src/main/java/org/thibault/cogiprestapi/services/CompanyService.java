@@ -31,4 +31,7 @@ public class CompanyService {
     this.companyRepository.deleteCompany(id);
   }
   
+  public Company updateCompany(int id, Company company){
+    return this.companyRepository.updateCompany(id, company);
+  }
 }

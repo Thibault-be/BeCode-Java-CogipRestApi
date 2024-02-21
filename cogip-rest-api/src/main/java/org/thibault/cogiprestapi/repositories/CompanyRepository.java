@@ -71,6 +71,17 @@ public class CompanyRepository {
     jdbc.update(sqlBuilder.toString(), id);
   }
   
+  public Company updateCompany(int id, Company company){
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("UPDATE company");
+    sqlBuilder.append(" SET name= ? , country= ?, vat= ?, type= ?");
+    sqlBuilder.append(" WHERE id = ?");
+    
+    jdbc.update(sqlBuilder.toString(), company.getName(), company.getCountry(), company.getVat(), company.getType(), id);
+    
+    String returnSql = "SELECT * FROM company where id = ?";
+    return jdbc.query(returnSql, getCompanyRowMapper(), id).get(0);
+  }
   
   private RowMapper<Company> getCompanyRowMapper(){
     
@@ -86,8 +97,4 @@ public class CompanyRepository {
     };
     return companyRowMapper;
   }
-  
-  
-
-  
 }

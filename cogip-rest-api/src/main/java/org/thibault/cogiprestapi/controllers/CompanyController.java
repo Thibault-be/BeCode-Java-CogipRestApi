@@ -1,5 +1,6 @@
 package org.thibault.cogiprestapi.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.model.Company;
@@ -42,7 +43,16 @@ public class CompanyController {
   @DeleteMapping ("/companies/{id}")
   public ResponseEntity<String> deleteCompany(@PathVariable int id){
     this.companyService.deleteCompany(id);
-    
     return ResponseEntity.ok("Company with company_id " + id + " was successfully deleted.");
+  }
+  
+  @PutMapping ("/companies/{id}")
+  public ResponseEntity<Company> updateCompany(@PathVariable int id,
+                                              @RequestBody Company company){
+    Company updatedCompany = this.companyService.updateCompany(id, company);
+    
+    return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(updatedCompany);
   }
 }
