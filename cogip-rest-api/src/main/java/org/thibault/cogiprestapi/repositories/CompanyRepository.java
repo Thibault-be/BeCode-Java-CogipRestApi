@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.model.Company;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,6 +22,32 @@ public class CompanyRepository {
     return jdbc.query(sql, getCompanyRowMapper());
   }
   
+  public List<Company> searchCompaniesByFilters(String name, String country, String type){
+    
+    List<Object> paramsArray = new ArrayList<>();
+    
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("SELECT * FROM company WHERE 1=1");
+    
+    if (name != null && !name.isEmpty()){
+      //sqlBuilder.append(" AND name = '" + name +"'");
+      sqlBuilder.append(" AND name = ?");
+      paramsArray.add(name);
+    }
+    
+    if (country != null && !country.isEmpty()){
+      sqlBuilder.append(" AND country = ?");
+      paramsArray.add(country);
+    }
+    
+    if (type != null && !type.isEmpty()){
+      sqlBuilder.append(" AND type = ? ");
+      paramsArray.add(type);
+    }
+    
+    return jdbc.query(sqlBuilder.toString(), paramsArray.toArray(), getCompanyRowMapper());
+  }
+  
   private RowMapper<Company> getCompanyRowMapper(){
     
     RowMapper<Company> companyRowMapper = (resultSet, i ) -> {
@@ -29,7 +56,7 @@ public class CompanyRepository {
       rowObject.setName(resultSet.getString("name"));
       rowObject.setCountry(resultSet.getString("country"));
       rowObject.setVat(resultSet.getString("vat"));
-      rowObject.setType("type");
+      rowObject.setType(resultSet.getString("type"));
       
       return rowObject;
     };
