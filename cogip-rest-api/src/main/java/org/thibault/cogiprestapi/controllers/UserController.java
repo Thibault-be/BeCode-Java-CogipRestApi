@@ -1,5 +1,6 @@
 package org.thibault.cogiprestapi.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.services.UserService;
@@ -37,6 +38,10 @@ public class UserController {
   @PutMapping("/users/{id}")
   public ResponseEntity<User> updateUser(@PathVariable int id,
                               @RequestBody User user){
+    User updatedUser = this.userService.updateUser(id, user);
     
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(updatedUser);
   }
 }

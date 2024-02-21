@@ -38,6 +38,20 @@ public class UserRepository {
             user.getRole());
   }
   
+  public User updateUser(int id, User user){
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("UPDATE user ");
+    sqlBuilder.append("SET username= ?, password= ?, role= ? ");
+    sqlBuilder.append("WHERE id= ?");
+    
+    jdbc.update(sqlBuilder.toString(), user.getUsername(), user.getPassword(), user.getRole(), id);
+    
+    String sqlUpdatedCompany = "SELECT * FROM user WHERE id = ?";
+    
+    return jdbc.query(sqlUpdatedCompany, getUserRowMapper(), id).get(0);
+    
+  }
+  
   private RowMapper<User> getUserRowMapper(){
     RowMapper<User> userRowMapper = (resultSet, i) -> {
       User rowObject = new User("", "","");

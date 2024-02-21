@@ -28,4 +28,8 @@ public class UserService {
     this.userRepository.addUser(user);
   }
   
+  public User updateUser(int id, User user){
+    return this.userRepository.updateUser(id, user);
+  }
+  
 }
