@@ -19,7 +19,7 @@ public class CompanyService {
     return this.companyRepository.getAllCompanies();
   }
   
-  public List<Company> searchCompaniesByFilters(String name, String country, String type){
-    return this.companyRepository.searchCompaniesByFilters(name, country, type);
+  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, String type){
+    return this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
   }
 }

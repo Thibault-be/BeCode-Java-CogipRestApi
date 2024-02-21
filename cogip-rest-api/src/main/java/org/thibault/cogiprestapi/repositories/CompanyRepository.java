@@ -22,15 +22,19 @@ public class CompanyRepository {
     return jdbc.query(sql, getCompanyRowMapper());
   }
   
-  public List<Company> searchCompaniesByFilters(String name, String country, String type){
+  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, String type){
     
     List<Object> paramsArray = new ArrayList<>();
     
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("SELECT * FROM company WHERE 1=1");
     
+    if (id != null && !id.isEmpty()){
+      sqlBuilder.append(" AND id = ?");
+      paramsArray.add(id);
+    }
+    
     if (name != null && !name.isEmpty()){
-      //sqlBuilder.append(" AND name = '" + name +"'");
       sqlBuilder.append(" AND name = ?");
       paramsArray.add(name);
     }
@@ -40,12 +44,17 @@ public class CompanyRepository {
       paramsArray.add(country);
     }
     
+    if (vat != null && !vat.isEmpty()){
+      sqlBuilder.append(" AND vat = ?");
+      paramsArray.add(vat);
+    }
+    
     if (type != null && !type.isEmpty()){
       sqlBuilder.append(" AND type = ? ");
       paramsArray.add(type);
     }
     
-    return jdbc.query(sqlBuilder.toString(), paramsArray.toArray(), getCompanyRowMapper());
+    return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
   
   private RowMapper<Company> getCompanyRowMapper(){

@@ -26,11 +26,12 @@ public class CompanyController {
   
   @GetMapping ("/companies/search")
   public List<Company> searchCompaniesByFilters(
+          @RequestParam (required = false) String id,
           @RequestParam (required = false) String name,
           @RequestParam (required = false) String country,
+          @RequestParam (required = false) String vat,
           @RequestParam (required = false) String type
         ){
-    return this.companyService.searchCompaniesByFilters(name, country, type);
+    return this.companyService.searchCompaniesByFilters(id, name, country, vat, type);
   }
-  
 }
