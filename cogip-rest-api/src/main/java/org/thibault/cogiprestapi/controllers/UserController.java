@@ -1,5 +1,6 @@
 package org.thibault.cogiprestapi.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
@@ -31,5 +32,11 @@ public class UserController {
     System.out.println("I AM HERE");
     System.out.println(user.getUsername());
     this.userService.addUser(user);
+  }
+  
+  @PutMapping("/users/{id}")
+  public ResponseEntity<User> updateUser(@PathVariable int id,
+                              @RequestBody User user){
+    
   }
 }
