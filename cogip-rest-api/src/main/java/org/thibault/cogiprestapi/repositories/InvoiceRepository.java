@@ -18,6 +18,10 @@ public class InvoiceRepository {
   
   public List<Invoice> getAllInvoices(){
     String sql = "SELECT * FROM invoice";
+    return jdbc.query(sql, getInvoiceRowMapper());
+  }
+  
+  private RowMapper<Invoice> getInvoiceRowMapper(){
     
     RowMapper<Invoice> invoiceMapper = (ResultSet, i) ->{
       Invoice rowObject = new Invoice();
@@ -32,6 +36,6 @@ public class InvoiceRepository {
       
       return rowObject;
     };
-    return jdbc.query(sql, invoiceMapper);
+    return invoiceMapper;
   }
 }
