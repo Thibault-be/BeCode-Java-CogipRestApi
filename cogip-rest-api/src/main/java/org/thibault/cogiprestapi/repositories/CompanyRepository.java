@@ -63,6 +63,15 @@ public class CompanyRepository {
     jdbc.update(sql, company.getName(), company.getCountry(), company.getVat(), company.getType());
   }
   
+  public void deleteCompany(int id){
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("DELETE FROM company WHERE 1=1 ");
+    sqlBuilder.append("AND id= ?");
+    
+    jdbc.update(sqlBuilder.toString(), id);
+    //jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), id);
+  }
+  
   
   private RowMapper<Company> getCompanyRowMapper(){
     

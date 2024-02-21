@@ -27,4 +27,8 @@ public class CompanyService {
     this.companyRepository.addCompany(company);
   }
   
+  public void deleteCompany(int id){
+    this.companyRepository.deleteCompany(id);
+  }
+  
 }
