@@ -22,4 +22,9 @@ public class CompanyService {
   public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, String type){
     return this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
   }
+  
+  public void addCompany(Company company){
+    this.companyRepository.addCompany(company);
+  }
+  
 }

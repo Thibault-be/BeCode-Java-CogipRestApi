@@ -53,9 +53,16 @@ public class CompanyRepository {
       sqlBuilder.append(" AND type = ? ");
       paramsArray.add(type);
     }
-    
     return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
+  
+  public void addCompany(Company company){
+    String sql = "INSERT INTO company (name, country, vat, type) " +
+            "VALUES (?, ?, ?, ?);";
+    
+    jdbc.update(sql, company.getName(), company.getCountry(), company.getVat(), company.getType());
+  }
+  
   
   private RowMapper<Company> getCompanyRowMapper(){
     
@@ -71,6 +78,8 @@ public class CompanyRepository {
     };
     return companyRowMapper;
   }
+  
+  
 
   
 }

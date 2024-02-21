@@ -1,9 +1,6 @@
 package org.thibault.cogiprestapi.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.services.CompanyService;
 
@@ -33,5 +30,12 @@ public class CompanyController {
           @RequestParam (required = false) String type
         ){
     return this.companyService.searchCompaniesByFilters(id, name, country, vat, type);
+  }
+  
+  @PostMapping ("/companies/add")
+  public String addCompany(@RequestBody Company company){
+    this.companyService.addCompany(company);
+    
+    return "Company " + company.getName() + " successfully added.";
   }
 }
