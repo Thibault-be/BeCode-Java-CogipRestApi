@@ -38,8 +38,6 @@ public class UserRepository {
             user.getRole());
   }
   
-  
-  
   private RowMapper<User> getUserRowMapper(){
     RowMapper<User> userRowMapper = (resultSet, i) -> {
       User rowObject = new User("", "","");
