@@ -69,7 +69,6 @@ public class CompanyRepository {
     sqlBuilder.append("AND id= ?");
     
     jdbc.update(sqlBuilder.toString(), id);
-    //jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), id);
   }
   
   
