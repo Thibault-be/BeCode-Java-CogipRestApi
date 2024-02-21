@@ -29,10 +29,12 @@ public class UserController {
   }
   
   @PostMapping ("/users")
-  public void addUser(@RequestBody User user){
-    System.out.println("I AM HERE");
-    System.out.println(user.getUsername());
+  public ResponseEntity<String> addUser(@RequestBody User user){
     this.userService.addUser(user);
+    
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body("User " + user.getUsername() + " added successfully.");
   }
   
   @PutMapping("/users/{id}")
