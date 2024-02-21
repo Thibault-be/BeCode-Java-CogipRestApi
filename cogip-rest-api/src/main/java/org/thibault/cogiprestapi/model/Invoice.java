@@ -13,6 +13,8 @@ public class Invoice {
   private String type;
   private String status;
   
+  public Invoice(){}
+  
   public Invoice(int id, int companyId, int contactId, String invoiceNumber, BigDecimal value, String currency, String type, String status) {
     this.id = id;
     this.companyId = companyId;
