@@ -92,9 +92,6 @@ public class InvoiceRepository {
     return jdbc.query(updatedInvoice, getInvoiceRowMapper(), id).get(0);
   }
   
-  
-  
-  
   private RowMapper<Invoice> getInvoiceRowMapper(){
     RowMapper<Invoice> invoiceMapper = (ResultSet, i) ->{
       Invoice rowObject = new Invoice();

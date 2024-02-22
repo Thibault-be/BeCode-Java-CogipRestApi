@@ -3,7 +3,6 @@ package org.thibault.cogiprestapi.services;
 import org.springframework.stereotype.Service;
 import org.thibault.cogiprestapi.model.Invoice;
 import org.thibault.cogiprestapi.repositories.InvoiceRepository;
-
 import java.util.List;
 
 @Service
@@ -30,5 +29,4 @@ public class InvoiceService {
   public Invoice updateInvoice(int id, Invoice invoice){
     return this.invoiceRepository.updateInvoice(id, invoice);
   }
-  
 }

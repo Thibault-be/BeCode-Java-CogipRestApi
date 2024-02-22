@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.model.Invoice;
 import org.thibault.cogiprestapi.services.InvoiceService;
-
 import java.util.List;
 
 @RestController
