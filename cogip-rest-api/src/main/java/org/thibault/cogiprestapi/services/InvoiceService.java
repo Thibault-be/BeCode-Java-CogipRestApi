@@ -19,4 +19,12 @@ public class InvoiceService {
     return this.invoiceRepository.getAllInvoices();
   }
   
+  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, String type, String status){
+    return this.invoiceRepository.searchInvoicesByFilters(id, companyId, invoiceNumber, type, status);
+  }
+  
+  public void addInvoice(Invoice invoice){
+    this.invoiceRepository.addInvoice(invoice);
+  }
+  
 }
