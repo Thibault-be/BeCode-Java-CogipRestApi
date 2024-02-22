@@ -1,9 +1,8 @@
 package org.thibault.cogiprestapi.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.model.Contact;
 import org.thibault.cogiprestapi.services.ContactService;
 
@@ -33,5 +32,14 @@ public class ContactController {
                           @RequestParam (required = false) Integer companyId
   ){
     return this.contactService.getContactsByFilters(id, firstname, lastname, phone, companyId);
+  }
+  
+  @PostMapping ("/contacts/add")
+  public ResponseEntity<String> addContact(@RequestBody Contact contact){
+    this.contactService.addContact(contact);
+    
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body("Contact " + contact.getFirstname() + " " + contact.getLastname() + " was successfully added.");
   }
 }

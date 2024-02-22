@@ -57,6 +57,18 @@ public class ContactRepository {
     return this.jdbc.query(sqlBuilder.toString(), getContactRowMapper(),reqParams.toArray());
   }
   
+  public void addContact(Contact contact){
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("INSERT INTO contact (firstname, lastname, phone, email, company_id)");
+    sqlBuilder.append(" VALUES (?,?,?,?,?);");
+    
+    jdbc.update(sqlBuilder.toString(),
+            contact.getFirstname(),
+            contact.getLastname(),
+            contact.getPhone(),
+            contact.getEmail(),
+            contact.getCompanyId());
+  }
   
   private RowMapper<Contact> getContactRowMapper(){
     RowMapper<Contact> contactRowMapper = (ResultSet, i) ->{

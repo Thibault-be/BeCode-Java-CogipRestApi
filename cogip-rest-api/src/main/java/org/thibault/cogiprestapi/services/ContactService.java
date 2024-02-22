@@ -22,4 +22,8 @@ public class ContactService {
   public List<Contact> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
     return this.contactRepository.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }
+  
+  public void addContact(Contact contact){
+    this.contactRepository.addContact(contact);
+  }
 }
