@@ -40,6 +40,15 @@ public class InvoiceController {
     return ResponseEntity
             .status(HttpStatus.CREATED)
             .body("Invoice with number " + invoice.getInvoiceNumber() + " was successfully added" );
-    
+  }
+  
+  @PutMapping ("invoices/update/{id}")
+  public ResponseEntity<Invoice> updateInvoice(
+                                      @PathVariable int id,
+                                      @RequestBody Invoice invoice){
+    Invoice updatedInvoice = this.invoiceService.updateInvoice(id, invoice);
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(updatedInvoice);
   }
 }

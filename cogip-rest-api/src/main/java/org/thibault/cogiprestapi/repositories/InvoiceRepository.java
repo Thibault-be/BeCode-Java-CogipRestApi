@@ -70,8 +70,30 @@ public class InvoiceRepository {
             invoice.getCurrency(),
             invoice.getType(),
             invoice.getStatus());
-    
   }
+  
+  public Invoice updateInvoice(int id, Invoice invoice){
+    String sql = "UPDATE invoice " +
+            "SET company_id = ?, contact_id = ?, invoice_number = ?, value= ?, currency= ?, type= ?, status= ?  " +
+            "WHERE id = ?";
+    
+    jdbc.update(sql,
+                invoice.getCompanyId(),
+                invoice.getContactId(),
+                invoice.getInvoiceNumber(),
+                invoice.getValue(),
+                invoice.getCurrency(),
+                invoice.getType(),
+                invoice.getStatus(),
+                id
+            );
+    
+    String updatedInvoice = "SELECT * from invoice WHERE id = ?";
+    return jdbc.query(updatedInvoice, getInvoiceRowMapper(), id).get(0);
+  }
+  
+  
+  
   
   private RowMapper<Invoice> getInvoiceRowMapper(){
     RowMapper<Invoice> invoiceMapper = (ResultSet, i) ->{

@@ -27,4 +27,8 @@ public class InvoiceService {
     this.invoiceRepository.addInvoice(invoice);
   }
   
+  public Invoice updateInvoice(int id, Invoice invoice){
+    return this.invoiceRepository.updateInvoice(id, invoice);
+  }
+  
 }
