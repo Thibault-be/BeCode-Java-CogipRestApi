@@ -24,14 +24,14 @@ public class ContactController {
     return this.contactService.getAllContacts();
   }
   
-  @GetMapping ("/contacts/search/{id}")
+  @GetMapping ("/contacts/search")
   public List<Contact> getContactsByFilters(
+                          @RequestParam (required = false) Integer id,
                           @RequestParam (required = false) String firstname,
                           @RequestParam (required = false) String lastname,
                           @RequestParam (required = false) String phone,
-                          @RequestParam (required = false) int companyId
+                          @RequestParam (required = false) Integer companyId
   ){
-    return this.contactService.getContactsByFilters(firstname, lastname, phone, companyId);
+    return this.contactService.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }
-  
 }

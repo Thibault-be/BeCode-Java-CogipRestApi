@@ -18,4 +18,8 @@ public class ContactService {
   public List<Contact> getAllContacts(){
     return this.contactRepository.getAllContacts();
   }
+  
+  public List<Contact> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
+    return this.contactRepository.getContactsByFilters(id, firstname, lastname, phone, companyId);
+  }
 }
