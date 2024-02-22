@@ -51,4 +51,13 @@ public class ContactController {
             .status(HttpStatus.OK)
             .body(updatedContact);
   }
+  
+  @DeleteMapping("/contacts/delete/{id}")
+  public ResponseEntity<String> deleteContact(@PathVariable int id){
+    this.contactService.deleteContact(id);
+    
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body("The contact with id " + id + " was successfully deleted.");
+  }
 }

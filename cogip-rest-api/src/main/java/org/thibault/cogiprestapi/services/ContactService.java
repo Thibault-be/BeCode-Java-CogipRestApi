@@ -30,4 +30,8 @@ public class ContactService {
   public Contact updateContact(Contact contact){
     return this.contactRepository.updateContact(contact);
   }
+  
+  public void deleteContact(int id){
+    this.contactRepository.deleteContact(id);
+  }
 }

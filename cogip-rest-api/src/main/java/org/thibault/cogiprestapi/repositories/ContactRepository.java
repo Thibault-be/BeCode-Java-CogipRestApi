@@ -87,6 +87,10 @@ public class ContactRepository {
     return this.jdbc.queryForObject("SELECT * FROM contact WHERE id=?", getContactRowMapper(), contact.getId());
   }
   
+  public void deleteContact(int id){
+    this.jdbc.update("DELETE FROM contact WHERE id= ?", id);
+  }
+  
   private RowMapper<Contact> getContactRowMapper(){
     RowMapper<Contact> contactRowMapper = (ResultSet, i) ->{
       Contact rowObject = new Contact();
