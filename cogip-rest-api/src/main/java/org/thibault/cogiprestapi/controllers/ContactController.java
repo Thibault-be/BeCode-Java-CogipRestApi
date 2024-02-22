@@ -42,4 +42,13 @@ public class ContactController {
             .status(HttpStatus.OK)
             .body("Contact " + contact.getFirstname() + " " + contact.getLastname() + " was successfully added.");
   }
+  
+  @PutMapping ("/contacts/update")
+  public ResponseEntity<Contact> updateContact(@RequestBody Contact contact){
+    Contact updatedContact = this.contactService.updateContact(contact);
+    
+    return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(updatedContact);
+  }
 }

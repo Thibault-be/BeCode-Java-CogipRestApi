@@ -70,6 +70,23 @@ public class ContactRepository {
             contact.getCompanyId());
   }
   
+  public Contact updateContact(Contact contact){
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("UPDATE contact");
+    sqlBuilder.append(" SET firstname = ?, lastname = ?, phone = ?, email = ?, company_id = ?");
+    sqlBuilder.append(" WHERE id= ?");
+    
+    this.jdbc.update(sqlBuilder.toString(),
+            contact.getFirstname(),
+            contact.getLastname(),
+            contact.getPhone(),
+            contact.getEmail(),
+            contact.getCompanyId(),
+            contact.getId());
+    
+    return this.jdbc.queryForObject("SELECT * FROM contact WHERE id=?", getContactRowMapper(), contact.getId());
+  }
+  
   private RowMapper<Contact> getContactRowMapper(){
     RowMapper<Contact> contactRowMapper = (ResultSet, i) ->{
       Contact rowObject = new Contact();
