@@ -54,6 +54,9 @@ public class UserRepository {
   
   private RowMapper<User> getUserRowMapper(){
     RowMapper<User> userRowMapper = (resultSet, i) -> {
+      
+      System.out.println("in the rowmapper");
+      
       User rowObject = new User("", "","");
       rowObject.setId(resultSet.getInt("id"));
       rowObject.setUserName(resultSet.getString("username"));

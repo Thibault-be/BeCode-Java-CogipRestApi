@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.model.Contact;
 
+import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,12 @@ public class ContactRepository {
   }
   
   private RowMapper<Contact> getContactRowMapper(){
+    
+    System.out.println("starting the contactRowmapper");
     RowMapper<Contact> contactRowMapper = (ResultSet, i) ->{
+      
+      System.out.println("in the rowmapper");
+
       Contact rowObject = new Contact();
       rowObject.setId(ResultSet.getInt("id"));
       rowObject.setFirstname(ResultSet.getString("firstname"));
