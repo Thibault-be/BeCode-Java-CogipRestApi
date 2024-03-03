@@ -1,15 +1,17 @@
 package org.thibault.cogiprestapi.model;
 
+import org.thibault.cogiprestapi.enums.UserRole;
+
 public class User {
   
   private int id;
   private String username;
   private String password;
-  private String role;
+  private UserRole role;
   
   public User(){};
   
-  public User(String username, String password, String role){
+  public User(String username, String password, UserRole role){
     this.username = username;
     this.password = password;
     this.role = role;
@@ -40,11 +42,11 @@ public class User {
     this.password = password;
   }
   
-  public String getRole() {
+  public UserRole getRole() {
     return role;
   }
   
-  public void setRole(String role) {
+  public void setRole(UserRole role) {
     this.role = role;
   }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
+import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.model.User;
 
 import java.sql.ResultSet;
@@ -47,7 +48,7 @@ public class UserRepository {
     User userOldData = getUserById(id);
     String username = userOldData.getUsername();
     String password = userOldData.getPassword();
-    String role = userOldData.getRole();
+    String role = userOldData.getRole().name();
     
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("UPDATE user ");
@@ -62,8 +63,8 @@ public class UserRepository {
       password = createUserDTO.getPassword();
     }
     
-    if(createUserDTO.getRole() != null && !createUserDTO.getRole().isEmpty()){
-      role = createUserDTO.getRole();
+    if(createUserDTO.getRole() != null){
+      role = createUserDTO.getRole().name();
     }
     
     jdbc.update(sqlBuilder.toString(), username, password, role, id);
@@ -85,7 +86,7 @@ public class UserRepository {
       rowObject.setId(resultSet.getInt("id"));
       rowObject.setUsername(resultSet.getString("username"));
       rowObject.setPassword(resultSet.getString("password"));
-      rowObject.setRole(resultSet.getString("role"));
+      rowObject.setRole(UserRole.valueOf(resultSet.getString("role")));
       
       return rowObject;
     };

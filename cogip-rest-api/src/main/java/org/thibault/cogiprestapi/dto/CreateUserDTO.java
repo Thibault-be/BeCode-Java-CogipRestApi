@@ -1,14 +1,16 @@
 package org.thibault.cogiprestapi.dto;
 
+import org.thibault.cogiprestapi.enums.UserRole;
+
 public class CreateUserDTO {
 
   private String username;
   private String password;
-  private String role;
+  private UserRole role;
   
   public CreateUserDTO(){}
   
-  public CreateUserDTO(String username, String password, String role) {
+  public CreateUserDTO(String username, String password, UserRole role) {
     this.username = username;
     this.password = password;
     this.role = role;
@@ -30,11 +32,11 @@ public class CreateUserDTO {
     this.password = password;
   }
   
-  public String getRole() {
+  public UserRole getRole() {
     return role;
   }
   
-  public void setRole(String role) {
+  public void setRole(UserRole role) {
     this.role = role;
   }
 }
