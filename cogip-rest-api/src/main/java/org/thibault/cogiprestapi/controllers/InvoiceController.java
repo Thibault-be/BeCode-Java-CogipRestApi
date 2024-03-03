@@ -22,6 +22,11 @@ public class InvoiceController {
     return this.invoiceService.getAllInvoices();
   }
   
+  @GetMapping("invoices/{id}")
+  public Invoice getInvoiceById(@PathVariable("id") int id){
+    return this.invoiceService.getInvoiceById(id);
+  }
+  
   @GetMapping ("/invoices/search")
   public List<Invoice> searchInvoicesByFilters(
           @RequestParam (required = false) Integer id,
@@ -33,7 +38,7 @@ public class InvoiceController {
     return this.invoiceService.searchInvoicesByFilters(id, companyId, invoiceNumber, type, status);
   }
   
-  @PostMapping ("/invoices/add")
+  @PostMapping ("/invoices")
   public ResponseEntity<String> addInvoice(@RequestBody Invoice invoice){
     this.invoiceService.addInvoice(invoice);
     return ResponseEntity
@@ -41,7 +46,7 @@ public class InvoiceController {
             .body("Invoice with number " + invoice.getInvoiceNumber() + " was successfully added" );
   }
   
-  @PutMapping ("invoices/update/{id}")
+  @PutMapping ("invoices/{id}")
   public ResponseEntity<Invoice> updateInvoice(
                                       @PathVariable int id,
                                       @RequestBody Invoice invoice){

@@ -2,9 +2,14 @@ package org.thibault.cogiprestapi.repositories;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.stereotype.Repository;
+import org.thibault.cogiprestapi.enums.Currency;
+import org.thibault.cogiprestapi.enums.InvoiceStatus;
+import org.thibault.cogiprestapi.enums.InvoiceType;
 import org.thibault.cogiprestapi.model.Invoice;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +25,11 @@ public class InvoiceRepository {
   public List<Invoice> getAllInvoices(){
     String sql = "SELECT * FROM invoice";
     return jdbc.query(sql, getInvoiceRowMapper());
+  }
+  
+  public Invoice getInvoiceById(int id){
+    String sql = "SELECT * FROM invoice where id= ?";
+    return jdbc.queryForObject(sql, getInvoiceRowMapper(),id);
   }
   
   public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, String type, String status){
@@ -68,8 +78,8 @@ public class InvoiceRepository {
             invoice.getInvoiceNumber(),
             invoice.getValue(),
             invoice.getCurrency(),
-            invoice.getType(),
-            invoice.getStatus());
+            invoice.getType().name(),
+            invoice.getStatus().name());
   }
   
   public Invoice updateInvoice(int id, Invoice invoice){
@@ -77,19 +87,37 @@ public class InvoiceRepository {
             "SET company_id = ?, contact_id = ?, invoice_number = ?, value= ?, currency= ?, type= ?, status= ?  " +
             "WHERE id = ?";
     
+    Invoice oldInvoiceData = getInvoiceById(id);
+    
+    Integer companyId = invoice.getCompanyId();
+    Integer contactId = invoice.getContactId();
+    String invoiceNumber = invoice.getInvoiceNumber();
+    BigDecimal value = invoice.getValue();
+    Currency currency = invoice.getCurrency();
+    InvoiceType type = invoice.getType();
+    InvoiceStatus status = invoice.getStatus();
+    
+    if (companyId == null || companyId == 0) companyId = oldInvoiceData.getCompanyId();
+    if (contactId == null || contactId == 0) contactId = oldInvoiceData.getContactId();
+    if (invoiceNumber == null || invoiceNumber.isEmpty()) invoiceNumber = oldInvoiceData.getInvoiceNumber();
+    if (value == null) value = oldInvoiceData.getValue();
+    if (currency == null) currency = oldInvoiceData.getCurrency();
+    if (type == null) type = oldInvoiceData.getType();
+    if (status == null) status = oldInvoiceData.getStatus();
+    
     jdbc.update(sql,
-                invoice.getCompanyId(),
-                invoice.getContactId(),
-                invoice.getInvoiceNumber(),
-                invoice.getValue(),
-                invoice.getCurrency(),
-                invoice.getType(),
-                invoice.getStatus(),
+                companyId,
+                contactId,
+                invoiceNumber,
+                value,
+                currency.name(),
+                type.name(),
+                status.name(),
                 id
             );
     
     String updatedInvoice = "SELECT * from invoice WHERE id = ?";
-    return jdbc.query(updatedInvoice, getInvoiceRowMapper(), id).get(0);
+    return jdbc.queryForObject(updatedInvoice, getInvoiceRowMapper(), id);
   }
   
   private RowMapper<Invoice> getInvoiceRowMapper(){
@@ -100,9 +128,9 @@ public class InvoiceRepository {
       rowObject.setContactId(ResultSet.getInt("contact_id"));
       rowObject.setInvoiceNumber(ResultSet.getString("invoice_number"));
       rowObject.setValue(ResultSet.getBigDecimal("value"));
-      rowObject.setCurrency(ResultSet.getString("currency"));
-      rowObject.setType(ResultSet.getString("type"));
-      rowObject.setStatus(ResultSet.getString("status"));
+      rowObject.setCurrency(Currency.valueOf(ResultSet.getString("currency")));
+      rowObject.setType(InvoiceType.valueOf(ResultSet.getString("type").toUpperCase()));
+      rowObject.setStatus(InvoiceStatus.valueOf(ResultSet.getString("status").toUpperCase()));
       
       return rowObject;
     };

@@ -18,6 +18,10 @@ public class InvoiceService {
     return this.invoiceRepository.getAllInvoices();
   }
   
+  public Invoice getInvoiceById(int id){
+    return this.invoiceRepository.getInvoiceById(id);
+  }
+  
   public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, String type, String status){
     return this.invoiceRepository.searchInvoicesByFilters(id, companyId, invoiceNumber, type, status);
   }

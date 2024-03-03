@@ -1,5 +1,9 @@
 package org.thibault.cogiprestapi.model;
 
+import org.thibault.cogiprestapi.enums.Currency;
+import org.thibault.cogiprestapi.enums.InvoiceStatus;
+import org.thibault.cogiprestapi.enums.InvoiceType;
+
 import java.math.BigDecimal;
 
 public class Invoice {
@@ -9,13 +13,13 @@ public class Invoice {
   private int contactId;
   private String invoiceNumber;
   private BigDecimal value;
-  private String currency;
-  private String type;
-  private String status;
+  private Currency currency;
+  private InvoiceType type;
+  private InvoiceStatus status;
   
   public Invoice(){}
   
-  public Invoice(int id, int companyId, int contactId, String invoiceNumber, BigDecimal value, String currency, String type, String status) {
+  public Invoice(int id, Integer companyId, Integer contactId, String invoiceNumber, BigDecimal value, Currency currency, InvoiceType type, InvoiceStatus status) {
     this.id = id;
     this.companyId = companyId;
     this.contactId = contactId;
@@ -34,7 +38,7 @@ public class Invoice {
     this.id = id;
   }
   
-  public int getCompanyId() {
+  public Integer getCompanyId() {
     return companyId;
   }
   
@@ -42,7 +46,7 @@ public class Invoice {
     this.companyId = companyId;
   }
   
-  public int getContactId() {
+  public Integer getContactId() {
     return contactId;
   }
   
@@ -66,27 +70,27 @@ public class Invoice {
     this.value = value;
   }
   
-  public String getCurrency() {
+  public Currency getCurrency() {
     return currency;
   }
   
-  public void setCurrency(String currency) {
+  public void setCurrency(Currency currency) {
     this.currency = currency;
   }
   
-  public String getType() {
+  public InvoiceType getType() {
     return type;
   }
   
-  public void setType(String type) {
+  public void setType(InvoiceType type) {
     this.type = type;
   }
   
-  public String getStatus() {
+  public InvoiceStatus getStatus() {
     return status;
   }
   
-  public void setStatus(String status) {
+  public void setStatus(InvoiceStatus status) {
     this.status = status;
   }
 }
