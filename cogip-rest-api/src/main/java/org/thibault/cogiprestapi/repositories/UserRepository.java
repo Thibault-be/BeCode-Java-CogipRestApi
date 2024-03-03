@@ -1,14 +1,20 @@
 package org.thibault.cogiprestapi.repositories;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
+import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
 import org.thibault.cogiprestapi.model.User;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Repository
@@ -25,26 +31,28 @@ public class UserRepository {
     return jdbc.query(sql, getUserRowMapper());
   }
 
-  public User getUserById(int id){
+  public User getUserById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM user WHERE id= ?";
     User userById = jdbc.queryForObject(sql, getUserRowMapper(), id );
     return userById;
   }
   
-  public User addUser(CreateUserDTO user){
+  public User addUser(CreateUserDTO user) throws DataIntegrityViolationException {
+
     String sql = "INSERT INTO user (username, password, role)" +
             " VALUES ( ?, ?, ?)";
     
-    jdbc.update(sql,
-            user.getUsername(),
-            user.getPassword(),
-            user.getRole());
+      jdbc.update(sql,
+              user.getUsername(),
+              user.getPassword(),
+              user.getRole().name());
     
     String returnSql = "SELECT * FROM user WHERE username = ?";
     return jdbc.queryForObject(returnSql, getUserRowMapper(), user.getUsername());
   }
   
-  public User updateUser(int id, CreateUserDTO createUserDTO){
+  //EmptyResultDataAccessException
+  public User updateUser(int id, CreateUserDTO createUserDTO) throws EmptyResultDataAccessException , DuplicateKeyException {
     User userOldData = getUserById(id);
     String username = userOldData.getUsername();
     String password = userOldData.getPassword();
@@ -73,9 +81,9 @@ public class UserRepository {
     return jdbc.queryForObject(sqlUpdatedUser, getUserRowMapper(), id);
   }
   
-  public void deleteUser(int id){
+  public void deleteUser(int id) throws EmptyResultDataAccessException{
+    User userExists = getUserById(id);
     String sql = "DELETE FROM user WHERE id=?";
-    
     jdbc.update(sql, id);
   }
   
