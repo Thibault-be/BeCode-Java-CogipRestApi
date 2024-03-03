@@ -1,5 +1,7 @@
 package org.thibault.cogiprestapi.repositories;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -25,7 +27,7 @@ public class ContactRepository {
     return jdbc.query(sql, getContactRowMapper()) ;
   }
   
-  public Contact getContactById(int id){
+  public Contact getContactById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM contact where id = ?";
     
     return jdbc.queryForObject(sql, getContactRowMapper(), id);
@@ -77,34 +79,46 @@ public class ContactRepository {
             contact.getCompanyId());
   }
   
-  public Contact updateContact(Contact contact){
+  public Contact updateContact(int id, Contact contact) throws EmptyResultDataAccessException, DataIntegrityViolationException{
+    
+    Contact oldContactData = getContactById(id);
+    
+    String firstname = contact.getFirstname();
+    String lastname = contact.getLastname();
+    String phone = contact.getPhone();
+    String email = contact.getEmail();
+    Integer companyId = contact.getCompanyId();
+    
+    if (firstname == null || firstname.isEmpty()) firstname = oldContactData.getFirstname();
+    if (lastname == null || lastname.isEmpty()) lastname = oldContactData.getLastname();
+    if (phone == null || phone.isEmpty()) phone = oldContactData.getPhone();
+    if (email == null || email.isEmpty()) email = oldContactData.getEmail();
+    if (companyId == null || companyId == 0) companyId = oldContactData.getCompanyId();
+    
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("UPDATE contact");
     sqlBuilder.append(" SET firstname = ?, lastname = ?, phone = ?, email = ?, company_id = ?");
     sqlBuilder.append(" WHERE id= ?");
     
     this.jdbc.update(sqlBuilder.toString(),
-            contact.getFirstname(),
-            contact.getLastname(),
-            contact.getPhone(),
-            contact.getEmail(),
-            contact.getCompanyId(),
-            contact.getId());
+            firstname,
+            lastname,
+            phone,
+            email,
+            companyId,
+            id);
     
-    return this.jdbc.queryForObject("SELECT * FROM contact WHERE id=?", getContactRowMapper(), contact.getId());
+    return this.jdbc.queryForObject("SELECT * FROM contact WHERE id=?", getContactRowMapper(), id);
   }
   
-  public void deleteContact(int id){
+  public void deleteContact(int id) throws EmptyResultDataAccessException {
+    Contact contactExists = getContactById(id);
     this.jdbc.update("DELETE FROM contact WHERE id= ?", id);
   }
   
   private RowMapper<Contact> getContactRowMapper(){
-    
-    System.out.println("starting the contactRowmapper");
     RowMapper<Contact> contactRowMapper = (ResultSet, i) ->{
       
-      System.out.println("in the rowmapper");
-
       Contact rowObject = new Contact();
       rowObject.setId(ResultSet.getInt("id"));
       rowObject.setFirstname(ResultSet.getString("firstname"));

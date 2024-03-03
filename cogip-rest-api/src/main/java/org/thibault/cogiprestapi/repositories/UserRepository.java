@@ -51,7 +51,6 @@ public class UserRepository {
     return jdbc.queryForObject(returnSql, getUserRowMapper(), user.getUsername());
   }
   
-  //EmptyResultDataAccessException
   public User updateUser(int id, CreateUserDTO createUserDTO) throws EmptyResultDataAccessException , DuplicateKeyException {
     User userOldData = getUserById(id);
     String username = userOldData.getUsername();
@@ -81,7 +80,7 @@ public class UserRepository {
     return jdbc.queryForObject(sqlUpdatedUser, getUserRowMapper(), id);
   }
   
-  public void deleteUser(int id) throws EmptyResultDataAccessException{
+  public void deleteUser(int id){
     User userExists = getUserById(id);
     String sql = "DELETE FROM user WHERE id=?";
     jdbc.update(sql, id);

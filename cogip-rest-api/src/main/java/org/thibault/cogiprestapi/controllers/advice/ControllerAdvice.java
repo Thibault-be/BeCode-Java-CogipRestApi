@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
-import org.thibault.cogiprestapi.exceptions.IdNotFoundException;
-import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
-import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
+import org.thibault.cogiprestapi.exceptions.*;
 
 
 @RestControllerAdvice
@@ -23,7 +20,7 @@ public class ControllerAdvice {
   @ExceptionHandler (ResultSetEmptyException.class)
   public ResponseEntity<String> handlerResultSetEmptyException(ResultSetEmptyException resultSetEmptyException){
     return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
+            .status(HttpStatus.BAD_REQUEST)
             .body(resultSetEmptyException.getMessage());
   }
   
@@ -40,5 +37,13 @@ public class ControllerAdvice {
             .status(HttpStatus.BAD_REQUEST)
             .body(duplicateValueException.getMessage());
   }
+  
+  @ExceptionHandler (IllegalParametersException.class)
+  public ResponseEntity<String> handleIllegalParametersException(IllegalParametersException illegalParametersException){
+    return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(illegalParametersException.getMessage());
+  }
+
   
 }

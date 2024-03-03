@@ -47,7 +47,6 @@ public class UserService {
   }
   
   public User updateUser(int id, CreateUserDTO createUserDTO){
-    
     try{
       return this.userRepository.updateUser(id, createUserDTO);
     } catch (EmptyResultDataAccessException mtre){
@@ -65,8 +64,7 @@ public class UserService {
     }
   }
   
-  private String parametersMissing(CreateUserDTO user)   {
-    
+  private String parametersMissing(CreateUserDTO user){
     StringBuilder missingParams = new StringBuilder("These are the missing parameters:\n");
     boolean flag = false;
     
@@ -82,34 +80,7 @@ public class UserService {
       missingParams.append("role");
       flag = true;
     }
-    
     if (flag) return missingParams.toString();
     return null;
-    
   }
-  
-//  private String parametersIllegal(CreateUserDTO user){
-//    StringBuilder parameters = new StringBuilder();
-//
-//    StringBuilder parameters = new StringBuilder("These are the missing parameters:\n");
-//    boolean flag = false;
-//
-//    if (user.getUsername() == null || user.getUsername().isEmpty()){
-//      parameters.append("username\n");
-//      flag = true;
-//    }
-//    if (user.getPassword() == null || user.getPassword().isEmpty()){
-//      parameters.append("password\n");
-//      flag = true;
-//    }
-//    if (user.getRole() == null){
-//      parameters.append("role");
-//      flag = true;
-//    }
-//
-//
-//
-//    return parameters.toString();
-//  }
-  
 }

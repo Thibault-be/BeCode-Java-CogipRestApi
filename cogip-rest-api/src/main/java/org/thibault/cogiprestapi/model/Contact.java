@@ -60,7 +60,7 @@ public class Contact {
     this.email = email;
   }
   
-  public int getCompanyId() {
+  public Integer getCompanyId() {
     return companyId;
   }
   

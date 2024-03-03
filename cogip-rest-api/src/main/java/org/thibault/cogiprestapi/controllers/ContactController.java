@@ -49,9 +49,9 @@ public class ContactController {
             .body("Contact " + contact.getFirstname() + " " + contact.getLastname() + " was successfully added.");
   }
   
-  @PutMapping ("/contacts/update")
-  public ResponseEntity<Contact> updateContact(@RequestBody Contact contact){
-    Contact updatedContact = this.contactService.updateContact(contact);
+  @PutMapping ("/contacts/update/{id}")
+  public ResponseEntity<Contact> updateContact(@PathVariable("id") int id, @RequestBody Contact contact){
+    Contact updatedContact = this.contactService.updateContact(id, contact);
     
     return ResponseEntity
             .status(HttpStatus.OK)
