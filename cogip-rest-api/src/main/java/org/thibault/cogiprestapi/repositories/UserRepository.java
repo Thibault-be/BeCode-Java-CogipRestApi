@@ -3,6 +3,8 @@ package org.thibault.cogiprestapi.repositories;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.thibault.cogiprestapi.dto.CreateUserDTO;
+import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.model.User;
 
 import java.sql.ResultSet;
@@ -21,14 +23,14 @@ public class UserRepository {
     String sql = "SELECT * FROM user;";
     return jdbc.query(sql, getUserRowMapper());
   }
-  
-  public User getUserById(String id){
+
+  public User getUserById(int id){
     String sql = "SELECT * FROM user WHERE id= ?";
     User userById = jdbc.queryForObject(sql, getUserRowMapper(), id );
     return userById;
   }
   
-  public void addUser(User user){
+  public User addUser(CreateUserDTO user){
     String sql = "INSERT INTO user (username, password, role)" +
             " VALUES ( ?, ?, ?)";
     
@@ -36,30 +38,52 @@ public class UserRepository {
             user.getUsername(),
             user.getPassword(),
             user.getRole());
+    
+    String returnSql = "SELECT * FROM user WHERE username = ?";
+    return jdbc.queryForObject(returnSql, getUserRowMapper(), user.getUsername());
   }
   
-  public User updateUser(int id, User user){
+  public User updateUser(int id, CreateUserDTO createUserDTO){
+    User userOldData = getUserById(id);
+    String username = userOldData.getUsername();
+    String password = userOldData.getPassword();
+    String role = userOldData.getRole();
+    
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("UPDATE user ");
     sqlBuilder.append("SET username= ?, password= ?, role= ? ");
     sqlBuilder.append("WHERE id= ?");
     
-    jdbc.update(sqlBuilder.toString(), user.getUsername(), user.getPassword(), user.getRole(), id);
+    if (createUserDTO.getUsername() != null && !createUserDTO.getUsername().isEmpty()){
+      username = createUserDTO.getUsername();
+    }
     
-    String sqlUpdatedCompany = "SELECT * FROM user WHERE id = ?";
+    if(createUserDTO.getPassword() != null && !createUserDTO.getPassword().isEmpty()){
+      password = createUserDTO.getPassword();
+    }
     
-    return jdbc.query(sqlUpdatedCompany, getUserRowMapper(), id).get(0);
+    if(createUserDTO.getRole() != null && !createUserDTO.getRole().isEmpty()){
+      role = createUserDTO.getRole();
+    }
     
+    jdbc.update(sqlBuilder.toString(), username, password, role, id);
+
+    String sqlUpdatedUser = "SELECT * FROM user WHERE id = ?";
+    return jdbc.queryForObject(sqlUpdatedUser, getUserRowMapper(), id);
+  }
+  
+  public void deleteUser(int id){
+    String sql = "DELETE FROM user WHERE id=?";
+    
+    jdbc.update(sql, id);
   }
   
   private RowMapper<User> getUserRowMapper(){
     RowMapper<User> userRowMapper = (resultSet, i) -> {
       
-      System.out.println("in the rowmapper");
-      
-      User rowObject = new User("", "","");
+      User rowObject = new User();
       rowObject.setId(resultSet.getInt("id"));
-      rowObject.setUserName(resultSet.getString("username"));
+      rowObject.setUsername(resultSet.getString("username"));
       rowObject.setPassword(resultSet.getString("password"));
       rowObject.setRole(resultSet.getString("role"));
       
