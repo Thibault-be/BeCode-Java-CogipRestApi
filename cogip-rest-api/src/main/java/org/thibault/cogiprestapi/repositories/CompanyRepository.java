@@ -3,6 +3,7 @@ package org.thibault.cogiprestapi.repositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.model.Company;
 
 import java.util.ArrayList;
@@ -22,7 +23,13 @@ public class CompanyRepository {
     return jdbc.query(sql, getCompanyRowMapper());
   }
   
-  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, String type){
+  public Company getCompanyById(int id){
+    String sql = "SELECT * FROM company WHERE id= ?;";
+    
+    return jdbc.queryForObject(sql, getCompanyRowMapper(), id);
+  }
+  
+  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, CompanyType type){
     
     List<Object> paramsArray = new ArrayList<>();
     
@@ -49,7 +56,7 @@ public class CompanyRepository {
       paramsArray.add(vat);
     }
     
-    if (type != null && !type.isEmpty()){
+    if (type != null){
       sqlBuilder.append(" AND type = ? ");
       paramsArray.add(type);
     }
@@ -86,12 +93,12 @@ public class CompanyRepository {
   private RowMapper<Company> getCompanyRowMapper(){
     
     RowMapper<Company> companyRowMapper = (resultSet, i ) -> {
-      Company rowObject = new Company("","","","");
+      Company rowObject = new Company();
       rowObject.setId(resultSet.getInt("id"));
       rowObject.setName(resultSet.getString("name"));
       rowObject.setCountry(resultSet.getString("country"));
       rowObject.setVat(resultSet.getString("vat"));
-      rowObject.setType(resultSet.getString("type"));
+      rowObject.setType(CompanyType.valueOf(resultSet.getString("type").toUpperCase()));
       
       return rowObject;
     };

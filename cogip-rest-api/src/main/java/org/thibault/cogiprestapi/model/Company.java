@@ -1,14 +1,18 @@
 package org.thibault.cogiprestapi.model;
 
+import org.thibault.cogiprestapi.enums.CompanyType;
+
 public class Company {
   
   private int id;
   private String name;
   private String country;
   private String vat;
-  private String type;
+  private CompanyType type;
   
-  public Company(String name, String country, String vat, String type){
+  public Company(){}
+  
+  public Company(String name, String country, String vat, CompanyType type){
     this.name = name;
     this.country = country;
     this.vat = vat;
@@ -47,11 +51,11 @@ public class Company {
     this.vat = vat;
   }
   
-  public String getType() {
+  public CompanyType getType() {
     return type;
   }
   
-  public void setType(String type) {
+  public void setType(CompanyType type) {
     this.type = type;
   }
 }

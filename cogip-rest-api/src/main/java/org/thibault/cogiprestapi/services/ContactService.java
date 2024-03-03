@@ -19,6 +19,10 @@ public class ContactService {
     return this.contactRepository.getAllContacts();
   }
   
+  public Contact getContactById(int id){
+    return this.contactRepository.getContactById(id);
+  }
+  
   public List<Contact> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
     return this.contactRepository.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }

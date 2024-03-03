@@ -25,6 +25,12 @@ public class ContactRepository {
     return jdbc.query(sql, getContactRowMapper()) ;
   }
   
+  public Contact getContactById(int id){
+    String sql = "SELECT * FROM contact where id = ?";
+    
+    return jdbc.queryForObject(sql, getContactRowMapper(), id);
+  }
+  
   public List<Contact> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("SELECT * FROM contact WHERE 1=1");

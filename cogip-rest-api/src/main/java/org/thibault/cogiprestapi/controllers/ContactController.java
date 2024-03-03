@@ -23,6 +23,12 @@ public class ContactController {
     return this.contactService.getAllContacts();
   }
   
+  @GetMapping ("/contacts/{id}")
+  public Contact getContactById(@PathVariable("id") int id){
+    return this.contactService.getContactById(id);
+  }
+  
+  
   @GetMapping ("/contacts/search")
   public List<Contact> getContactsByFilters(
                           @RequestParam (required = false) Integer id,

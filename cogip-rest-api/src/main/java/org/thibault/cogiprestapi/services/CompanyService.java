@@ -1,6 +1,7 @@
 package org.thibault.cogiprestapi.services;
 
 import org.springframework.stereotype.Service;
+import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.repositories.CompanyRepository;
 
@@ -19,7 +20,11 @@ public class CompanyService {
     return this.companyRepository.getAllCompanies();
   }
   
-  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, String type){
+  public Company getCompanyById(int id){
+    return this.companyRepository.getCompanyById(id);
+  }
+  
+  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, CompanyType type){
     return this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
   }
   
