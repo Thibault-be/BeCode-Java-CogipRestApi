@@ -2,6 +2,7 @@ package org.thibault.cogiprestapi.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
@@ -41,6 +42,7 @@ public class InvoiceController {
     return this.invoiceService.searchInvoicesByFilters(id, companyId, invoiceNumber, currency, type, status);
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PostMapping ("/invoices")
   public ResponseEntity<String> addInvoice(@RequestBody Invoice invoice){
     this.invoiceService.addInvoice(invoice);
@@ -49,6 +51,7 @@ public class InvoiceController {
             .body("Invoice with number " + invoice.getInvoiceNumber() + " was successfully added" );
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PutMapping ("invoices/{id}")
   public ResponseEntity<Invoice> updateInvoice(
                                       @PathVariable int id,

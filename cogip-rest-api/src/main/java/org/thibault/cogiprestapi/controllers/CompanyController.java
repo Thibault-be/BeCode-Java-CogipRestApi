@@ -3,6 +3,7 @@ package org.thibault.cogiprestapi.controllers;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
@@ -43,6 +44,7 @@ public class CompanyController {
     return this.companyService.searchCompaniesByFilters(id, name, country, vat, type);
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PostMapping ("/companies/add")
   public ResponseEntity<String> addCompany(@RequestBody Company company){
     try{
@@ -54,12 +56,14 @@ public class CompanyController {
     return ResponseEntity.ok("Company " + company.getName() + " successfully added.");
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @DeleteMapping ("/companies/{id}")
   public ResponseEntity<String> deleteCompany(@PathVariable int id){
     this.companyService.deleteCompany(id);
     return ResponseEntity.ok("Company with company_id " + id + " was successfully deleted.");
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PutMapping ("/companies/{id}")
   public ResponseEntity<Company> updateCompany(@PathVariable int id,
                                               @RequestBody Company company){
