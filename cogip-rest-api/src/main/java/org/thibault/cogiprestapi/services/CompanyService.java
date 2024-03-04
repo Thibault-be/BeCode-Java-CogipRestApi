@@ -1,13 +1,11 @@
 package org.thibault.cogiprestapi.services;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.stereotype.Service;
 import org.thibault.cogiprestapi.enums.CompanyType;
-import org.thibault.cogiprestapi.exceptions.IdNotFoundException;
-import org.thibault.cogiprestapi.exceptions.IllegalParametersException;
-import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
-import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
+import org.thibault.cogiprestapi.exceptions.*;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.repositories.CompanyRepository;
 
@@ -37,45 +35,35 @@ public class CompanyService {
   }
   
   public List<Company> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
-    
-    try{
-      getCompanyById(id);
-    } catch (EmptyResultDataAccessException ex){
-      throw new IdNotFoundException("Company with id " + id + " does not exist.");
-    }
-    
+    getCompanyById(id); //validate if company with this id exists
     List<Company> filteredCompanies = this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
     if (filteredCompanies.isEmpty()) throw new ResultSetEmptyException("No companies for your filters were found.");
     return filteredCompanies;
   }
   
   public void addCompany(Company company){
-    System.out.println("not even here");
     String missingParams = missingParameters(company);
     if (missingParams != null) throw new ParametersMissingException(missingParams);
     
-    System.out.println(correctEnum(company.getType()));
-    
     try{
-      System.out.println("test");
-      correctEnum(company.getType());
-      System.out.println("nog");
-    } catch (Exception e){
-      System.out.println(e.getClass());
-      throw new IllegalParametersException("Company type should be CLIENT or PROVIDER.");
+      this.companyRepository.addCompany(company);
+    } catch (DuplicateKeyException e){
+      throw new DuplicateValueException("A company with vat number " + company.getVat() + " already exists.");
     }
-    
-    //this.companyRepository.addCompany(company);
   }
   
   public void deleteCompany(int id){
+    getCompanyById(id); //validate if company with this id exists
     this.companyRepository.deleteCompany(id);
   }
   
   public Company updateCompany(int id, Company company){
-    return this.companyRepository.updateCompany(id, company);
+    try{
+      return this.companyRepository.updateCompany(id, company);
+    } catch (EmptyResultDataAccessException mtre){
+      throw new IdNotFoundException("Company with id "+id+" does not exist.");
+    }
   }
-  
   
   private String missingParameters(Company company){
     StringBuilder params = new StringBuilder();
@@ -91,6 +79,7 @@ public class CompanyService {
       flag = true;
     }
     if (company.getType() == null){
+      System.out.println("checking type");
       params.append("type");
       flag = true;
     }
@@ -98,11 +87,10 @@ public class CompanyService {
     return null;
   }
   
-  private boolean correctEnum(CompanyType type){
-    System.out.println("i am here");
-    if (type.equals(CompanyType.CLIENT)) return true;
-    if (type.equals(CompanyType.PROVIDER)) return true;
-    return false;
-  }
+//  private boolean correctEnum(CompanyType type){
+//    if (type.equals(CompanyType.CLIENT)) return true;
+//    if (type.equals(CompanyType.PROVIDER)) return true;
+//    return false;
+//  }
   
 }

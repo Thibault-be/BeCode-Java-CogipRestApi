@@ -1,5 +1,6 @@
 package org.thibault.cogiprestapi.repositories;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,7 +27,6 @@ public class CompanyRepository {
   
   public Company getCompanyById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM company WHERE id= ?;";
-    
     return jdbc.queryForObject(sql, getCompanyRowMapper(), id);
   }
   
@@ -60,10 +60,9 @@ public class CompanyRepository {
     return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
   
-  public void addCompany(Company company) throws Exception{
+  public void addCompany(Company company) throws DuplicateKeyException {
     String sql = "INSERT INTO company (name, country, vat, type) " +
             "VALUES (?, ?, ?, ?);";
-    
     jdbc.update(sql, company.getName(), company.getCountry(), company.getVat(), company.getType().name());
   }
   
@@ -75,13 +74,30 @@ public class CompanyRepository {
     jdbc.update(sqlBuilder.toString(), id);
   }
   
-  public Company updateCompany(int id, Company company){
+  public Company updateCompany(int id, Company company) throws EmptyResultDataAccessException{
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("UPDATE company");
     sqlBuilder.append(" SET name= ? , country= ?, vat= ?, type= ?");
     sqlBuilder.append(" WHERE id = ?");
     
-    jdbc.update(sqlBuilder.toString(), company.getName(), company.getCountry(), company.getVat(), company.getType(), id);
+    Company oldCompanyData = getCompanyById(id);
+    
+    String name = company.getName();
+    String country = company.getCountry();
+    String vat = company.getVat();
+    CompanyType type = company.getType();
+    
+    if (name == null || name.isEmpty()) name = oldCompanyData.getName();
+    if (country == null || country.isEmpty()) country = oldCompanyData.getCountry();
+    if (vat == null || vat.isEmpty()) vat = oldCompanyData.getVat();
+    if (type == null) type = oldCompanyData.getType();
+    
+    jdbc.update(sqlBuilder.toString(),
+            name,
+            country,
+            vat,
+            type.name(),
+            id);
     
     String returnSql = "SELECT * FROM company where id = ?";
     return jdbc.query(returnSql, getCompanyRowMapper(), id).get(0);

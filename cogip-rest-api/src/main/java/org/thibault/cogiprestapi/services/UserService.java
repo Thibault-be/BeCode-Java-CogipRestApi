@@ -28,7 +28,6 @@ public class UserService {
     List<User> allUsers = this.userRepository.getAllUsers();
     if (allUsers.isEmpty()) throw new ResultSetEmptyException("There are no users in the database.");
     return allUsers;
-
   }
   
   public User getUserById(int id){

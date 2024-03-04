@@ -2,6 +2,7 @@ package org.thibault.cogiprestapi.controllers.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.thibault.cogiprestapi.exceptions.*;
@@ -43,6 +44,11 @@ public class ControllerAdvice {
     return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(illegalParametersException.getMessage());
+  }
+  
+  @ExceptionHandler (HttpMessageNotReadableException.class)
+  public String handleHttpMessageNotReadableException (HttpMessageNotReadableException httpMessageNotReadableException){
+    return "http not readable";
   }
 
   

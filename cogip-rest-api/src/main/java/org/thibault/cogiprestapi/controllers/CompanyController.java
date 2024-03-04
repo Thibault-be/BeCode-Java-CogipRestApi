@@ -1,9 +1,11 @@
 package org.thibault.cogiprestapi.controllers;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.enums.CompanyType;
+import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
 import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.services.CompanyService;
@@ -43,7 +45,12 @@ public class CompanyController {
   
   @PostMapping ("/companies/add")
   public ResponseEntity<String> addCompany(@RequestBody Company company){
-    this.companyService.addCompany(company);
+    try{
+      System.out.println("in controller adding company");
+      this.companyService.addCompany(company);
+    } catch (DuplicateKeyException e){
+      throw new DuplicateValueException("A company with this VAT number already exists in the table");
+    }
     return ResponseEntity.ok("Company " + company.getName() + " successfully added.");
   }
   
