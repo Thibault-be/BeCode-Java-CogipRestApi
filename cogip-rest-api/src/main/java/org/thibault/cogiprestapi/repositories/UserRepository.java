@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
@@ -21,9 +22,11 @@ import java.util.List;
 public class UserRepository {
   
   private final JdbcTemplate jdbc;
+  private final PasswordEncoder passwordEncoder;
   
-  public UserRepository(JdbcTemplate jdbc){
+  public UserRepository(JdbcTemplate jdbc, PasswordEncoder passwordEncoder){
     this.jdbc = jdbc;
+    this.passwordEncoder = passwordEncoder;
   }
   
   public List<User> getAllUsers(){
@@ -44,7 +47,7 @@ public class UserRepository {
     
       jdbc.update(sql,
               user.getUsername(),
-              user.getPassword(),
+              passwordEncoder.encode(user.getPassword()),
               user.getRole().name());
     
     String returnSql = "SELECT * FROM user WHERE username = ?";
@@ -67,7 +70,7 @@ public class UserRepository {
     }
     
     if(createUserDTO.getPassword() != null && !createUserDTO.getPassword().isEmpty()){
-      password = createUserDTO.getPassword();
+      password = passwordEncoder.encode(createUserDTO.getPassword());
     }
     
     if(createUserDTO.getRole() != null){
