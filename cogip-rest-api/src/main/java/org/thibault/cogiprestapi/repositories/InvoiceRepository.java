@@ -1,5 +1,8 @@
 package org.thibault.cogiprestapi.repositories;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -27,12 +30,12 @@ public class InvoiceRepository {
     return jdbc.query(sql, getInvoiceRowMapper());
   }
   
-  public Invoice getInvoiceById(int id){
+  public Invoice getInvoiceById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM invoice where id= ?";
     return jdbc.queryForObject(sql, getInvoiceRowMapper(),id);
   }
   
-  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, String type, String status){
+  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, String type, String status){
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("SELECT * FROM invoice WHERE 1=1");
     
@@ -42,47 +45,46 @@ public class InvoiceRepository {
       sqlBuilder.append(" AND id = ?");
       reqParams.add(id);
     }
-    
     if (companyId != null){
       sqlBuilder.append(" AND company_id = ?");
       reqParams.add(companyId);
     }
-    
     if (invoiceNumber != null && !invoiceNumber.isEmpty()){
       sqlBuilder.append(" AND invoice_number = ?");
       reqParams.add(invoiceNumber);
     }
-    
+    if (currency != null){
+      sqlBuilder.append(" AND currency = ?");
+      reqParams.add(currency.name());
+    }
     if (type != null && !type.isEmpty()){
       sqlBuilder.append(" AND type = ?");
       reqParams.add(type);
     }
-    
     if (status != null && !status.isEmpty()){
       sqlBuilder.append(" AND status = ?");
       reqParams.add(status);
     }
-    
     return jdbc.query(sqlBuilder.toString(), getInvoiceRowMapper(), reqParams.toArray());
   }
   
-  public void addInvoice(Invoice invoice){
+  public void addInvoice(Invoice invoice) throws DataIntegrityViolationException {
     StringBuilder sqlBuilder = new StringBuilder();
     
     sqlBuilder.append("INSERT INTO invoice (company_id, contact_id, invoice_number, value, currency, type, status)");
     sqlBuilder.append("VALUES (?,?,?,?,?,?,?);");
-
+    
     jdbc.update(sqlBuilder.toString(),
             invoice.getCompanyId(),
             invoice.getContactId(),
             invoice.getInvoiceNumber(),
             invoice.getValue(),
-            invoice.getCurrency(),
+            invoice.getCurrency().name(),
             invoice.getType().name(),
             invoice.getStatus().name());
   }
   
-  public Invoice updateInvoice(int id, Invoice invoice){
+  public Invoice updateInvoice(int id, Invoice invoice) throws DataIntegrityViolationException {
     String sql = "UPDATE invoice " +
             "SET company_id = ?, contact_id = ?, invoice_number = ?, value= ?, currency= ?, type= ?, status= ?  " +
             "WHERE id = ?";

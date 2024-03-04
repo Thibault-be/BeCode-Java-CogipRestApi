@@ -3,6 +3,8 @@ package org.thibault.cogiprestapi.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.thibault.cogiprestapi.enums.Currency;
+import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.model.Invoice;
 import org.thibault.cogiprestapi.services.InvoiceService;
 import java.util.List;
@@ -32,10 +34,11 @@ public class InvoiceController {
           @RequestParam (required = false) Integer id,
           @RequestParam (required = false) Integer companyId,
           @RequestParam (required = false) String invoiceNumber,
+          @RequestParam (required = false) Currency currency,
           @RequestParam (required = false) String type,
           @RequestParam (required = false) String status
   ){
-    return this.invoiceService.searchInvoicesByFilters(id, companyId, invoiceNumber, type, status);
+    return this.invoiceService.searchInvoicesByFilters(id, companyId, invoiceNumber, currency, type, status);
   }
   
   @PostMapping ("/invoices")
