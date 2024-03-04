@@ -1,5 +1,6 @@
 package org.thibault.cogiprestapi.repositories;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -23,39 +24,35 @@ public class CompanyRepository {
     return jdbc.query(sql, getCompanyRowMapper());
   }
   
-  public Company getCompanyById(int id){
+  public Company getCompanyById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM company WHERE id= ?;";
     
     return jdbc.queryForObject(sql, getCompanyRowMapper(), id);
   }
   
-  public List<Company> searchCompaniesByFilters(String id, String name, String country, String vat, CompanyType type){
+  public List<Company> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
     
     List<Object> paramsArray = new ArrayList<>();
     
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("SELECT * FROM company WHERE 1=1");
     
-    if (id != null && !id.isEmpty()){
+    if (id != null){
       sqlBuilder.append(" AND id = ?");
       paramsArray.add(id);
     }
-    
     if (name != null && !name.isEmpty()){
       sqlBuilder.append(" AND name = ?");
       paramsArray.add(name);
     }
-    
     if (country != null && !country.isEmpty()){
       sqlBuilder.append(" AND country = ?");
       paramsArray.add(country);
     }
-    
     if (vat != null && !vat.isEmpty()){
       sqlBuilder.append(" AND vat = ?");
       paramsArray.add(vat);
     }
-    
     if (type != null){
       sqlBuilder.append(" AND type = ? ");
       paramsArray.add(type);
@@ -63,11 +60,11 @@ public class CompanyRepository {
     return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
   
-  public void addCompany(Company company){
+  public void addCompany(Company company) throws Exception{
     String sql = "INSERT INTO company (name, country, vat, type) " +
             "VALUES (?, ?, ?, ?);";
     
-    jdbc.update(sql, company.getName(), company.getCountry(), company.getVat(), company.getType());
+    jdbc.update(sql, company.getName(), company.getCountry(), company.getVat(), company.getType().name());
   }
   
   public void deleteCompany(int id){

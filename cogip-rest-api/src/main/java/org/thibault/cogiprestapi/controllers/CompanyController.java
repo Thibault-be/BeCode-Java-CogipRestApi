@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.enums.CompanyType;
+import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.services.CompanyService;
 
@@ -31,7 +32,7 @@ public class CompanyController {
   
   @GetMapping ("/companies/search")
   public List<Company> searchCompaniesByFilters(
-          @RequestParam (required = false) String id,
+          @RequestParam (required = false) int id,
           @RequestParam (required = false) String name,
           @RequestParam (required = false) String country,
           @RequestParam (required = false) String vat,
