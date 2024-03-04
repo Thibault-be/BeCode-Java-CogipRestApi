@@ -1,5 +1,6 @@
 package org.thibault.cogiprestapi.services;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,14 @@ public class UserService {
   }
   
   public User addUser(CreateUserDTO createUserDTO){
-    
     String allFields = parametersMissing(createUserDTO);
     if (allFields != null) throw new ParametersMissingException(allFields);
-    return this.userRepository.addUser(createUserDTO);
+    
+    try{
+      return this.userRepository.addUser(createUserDTO);
+    } catch (DataIntegrityViolationException dive){
+      throw new DuplicateValueException("The username " + createUserDTO.getUsername() + " is already taken. Please choose another username.");
+    }
   }
   
   public User updateUser(int id, CreateUserDTO createUserDTO){

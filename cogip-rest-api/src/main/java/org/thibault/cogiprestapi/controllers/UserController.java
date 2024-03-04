@@ -2,6 +2,7 @@ package org.thibault.cogiprestapi.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
@@ -37,6 +38,7 @@ public class UserController {
     return mapUserToDTO(this.userService.getUserById(id));
   }
   
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping ("/users")
   public ResponseEntity<UserDTO> addUser(@RequestBody CreateUserDTO createUserDTO){
     User addedToRepositoryUser = this.userService.addUser(createUserDTO);
@@ -47,6 +49,7 @@ public class UserController {
             .body(addedUserDTO);
   }
   
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/users/{id}")
   public ResponseEntity<UserDTO> updateUser(@PathVariable int id,
                               @RequestBody CreateUserDTO createUserDTO){
@@ -58,6 +61,7 @@ public class UserController {
             .body(updatedUserDTO);
   }
   
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping ("users/{id}")
   public ResponseEntity<String> deleteUser(@PathVariable("id") int id){
     this.userService.deleteUser(id);
