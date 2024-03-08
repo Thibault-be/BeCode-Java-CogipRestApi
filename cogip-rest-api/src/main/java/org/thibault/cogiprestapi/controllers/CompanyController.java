@@ -34,7 +34,7 @@ public class CompanyController {
   
   @GetMapping ("/companies/search")
   public List<Company> searchCompaniesByFilters(
-          @RequestParam (required = false) int id,
+          @RequestParam (required = false) Integer id,
           @RequestParam (required = false) String name,
           @RequestParam (required = false) String country,
           @RequestParam (required = false) String vat,

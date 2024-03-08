@@ -35,7 +35,7 @@ public class CompanyService {
   }
   
   public List<Company> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
-    getCompanyById(id); //validate if company with this id exists
+    //getCompanyById(id); //validate if company with this id exists
     List<Company> filteredCompanies = this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
     if (filteredCompanies.isEmpty()) throw new ResultSetEmptyException("No companies for your filters were found.");
     return filteredCompanies;
