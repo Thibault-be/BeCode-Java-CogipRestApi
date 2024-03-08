@@ -86,11 +86,4 @@ public class CompanyService {
     if (flag) return params.toString();
     return null;
   }
-  
-//  private boolean correctEnum(CompanyType type){
-//    if (type.equals(CompanyType.CLIENT)) return true;
-//    if (type.equals(CompanyType.PROVIDER)) return true;
-//    return false;
-//  }
-  
 }
