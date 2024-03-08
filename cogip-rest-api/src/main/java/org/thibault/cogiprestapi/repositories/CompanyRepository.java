@@ -55,7 +55,7 @@ public class CompanyRepository {
     }
     if (type != null){
       sqlBuilder.append(" AND type = ? ");
-      paramsArray.add(type);
+      paramsArray.add(type.name());
     }
     return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
