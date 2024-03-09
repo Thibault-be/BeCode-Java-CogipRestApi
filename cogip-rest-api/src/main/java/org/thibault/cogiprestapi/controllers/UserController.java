@@ -5,11 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
+import org.thibault.cogiprestapi.enums.UserRole;
+import org.thibault.cogiprestapi.exceptions.IllegalParametersException;
+import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping
@@ -35,6 +39,23 @@ public class UserController {
   @GetMapping ("/users/{id}")
   public UserDTO getUserById(@PathVariable("id") int id){
     return mapUserToDTO(this.userService.getUserById(id));
+  }
+  
+  @GetMapping ("/users/search")
+  public List<UserDTO> getUsersByFilters(@RequestParam (required = false) Integer id,
+                                         @RequestParam (required = false) String username,
+                                         @RequestParam (required = false) String role){
+    UserRole userRole = convertStringToRole(role);
+    List<UserDTO> userDTOs = new ArrayList<>();
+    this.userService.getUsersByFilters(id, username, userRole).stream()
+            .forEach(user -> {
+              UserDTO mappedUser = mapUserToDTO(user);
+              userDTOs.add(mappedUser);
+            });
+    
+    if (userDTOs.isEmpty()) throw new ResultSetEmptyException("No matches for your search criteria.");
+    
+    return userDTOs;
   }
   
   @PostMapping ("/users")
@@ -74,5 +95,21 @@ public class UserController {
   
   private User mapCreateUserDtoToUser(CreateUserDTO createUserDTO){
     return new User(createUserDTO.getUsername(), createUserDTO.getPassword(), createUserDTO.getRole());
+  }
+  
+  private UserRole convertStringToRole(String role){
+    
+    if (role == null) return null;
+    
+    if (role.equalsIgnoreCase("admin")){
+      return UserRole.ADMIN;
+    }
+    if (role.equalsIgnoreCase("accountant")){
+      return UserRole.ACCOUNTANT;
+    }
+    if (role.equalsIgnoreCase("intern")){
+      return UserRole.INTERN;
+    }
+    throw new IllegalParametersException("Please enter a valid role. Options: admin, accountant or intern.");
   }
 }

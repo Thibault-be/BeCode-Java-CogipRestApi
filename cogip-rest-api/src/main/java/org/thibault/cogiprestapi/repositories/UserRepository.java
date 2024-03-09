@@ -15,6 +15,7 @@ import org.thibault.cogiprestapi.model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -35,6 +36,28 @@ public class UserRepository {
     String sql = "SELECT * FROM user WHERE id= ?";
     User userById = jdbc.queryForObject(sql, getUserRowMapper(), id );
     return userById;
+  }
+  
+  public List<User> getUsersByFilters(Integer id, String username, UserRole role){
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("SELECT * FROM user WHERE 1+1");
+    
+    ArrayList<Object> params = new ArrayList<>();
+    
+    if (id != null){
+      sqlBuilder.append(" AND id = ?");
+      params.add(id);
+    }
+    if (username != null && !username.isEmpty()){
+      sqlBuilder.append(" AND username = ?");
+      params.add(username);
+    }
+    if (role != null){
+      sqlBuilder.append(" AND role =?");
+      params.add(role.name().toUpperCase());
+    }
+    sqlBuilder.append(";");
+    return jdbc.query(sqlBuilder.toString(), getUserRowMapper(), params.toArray());
   }
   
   public User addUser(CreateUserDTO user) throws DataIntegrityViolationException {
