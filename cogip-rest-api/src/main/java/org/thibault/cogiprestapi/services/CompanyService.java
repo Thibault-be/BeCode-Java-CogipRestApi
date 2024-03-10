@@ -35,18 +35,18 @@ public class CompanyService {
   }
   
   public List<Company> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
-    getCompanyById(id); //validate if company with this id exists
+    //getCompanyById(id); //validate if company with this id exists
     List<Company> filteredCompanies = this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
     if (filteredCompanies.isEmpty()) throw new ResultSetEmptyException("No companies for your filters were found.");
     return filteredCompanies;
   }
   
-  public void addCompany(Company company){
+  public Company addCompany(Company company){
     String missingParams = missingParameters(company);
     if (missingParams != null) throw new ParametersMissingException(missingParams);
     
     try{
-      this.companyRepository.addCompany(company);
+      return this.companyRepository.addCompany(company);
     } catch (DuplicateKeyException e){
       throw new DuplicateValueException("A company with vat number " + company.getVat() + " already exists.");
     }
@@ -67,7 +67,6 @@ public class CompanyService {
   
   private String missingParameters(Company company){
     StringBuilder params = new StringBuilder();
-    System.out.println("in params");
     params.append("These are the missing parameters:\n");
     boolean flag = false;
     if (company.getName() == null || company.getName().isEmpty()){
@@ -86,11 +85,4 @@ public class CompanyService {
     if (flag) return params.toString();
     return null;
   }
-  
-//  private boolean correctEnum(CompanyType type){
-//    if (type.equals(CompanyType.CLIENT)) return true;
-//    if (type.equals(CompanyType.PROVIDER)) return true;
-//    return false;
-//  }
-  
 }

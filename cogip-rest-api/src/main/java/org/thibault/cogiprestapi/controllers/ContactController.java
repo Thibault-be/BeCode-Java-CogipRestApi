@@ -20,7 +20,7 @@ public class ContactController {
   }
   
   @GetMapping ("/contacts")
-  public List<Contact> getAllContact() {
+  public List<Contact> getAllContacts() {
     return this.contactService.getAllContacts();
   }
   
@@ -41,18 +41,19 @@ public class ContactController {
     return this.contactService.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }
   
+
   @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
-  @PostMapping ("/contacts/add")
-  public ResponseEntity<String> addContact(@RequestBody Contact contact){
-    this.contactService.addContact(contact);
+  @PostMapping ("/contacts")
+  public ResponseEntity<Contact> addContact(@RequestBody Contact contact){
+    Contact returnContact = this.contactService.addContact(contact);
     
     return ResponseEntity
             .status(HttpStatus.OK)
-            .body("Contact " + contact.getFirstname() + " " + contact.getLastname() + " was successfully added.");
+            .body(returnContact);
   }
   
+  @PutMapping ("/contacts/{id}")
   @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
-  @PutMapping ("/contacts/update/{id}")
   public ResponseEntity<Contact> updateContact(@PathVariable("id") int id, @RequestBody Contact contact){
     Contact updatedContact = this.contactService.updateContact(id, contact);
     
@@ -61,8 +62,8 @@ public class ContactController {
             .body(updatedContact);
   }
   
+  @DeleteMapping("/contacts/{id}")
   @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
-  @DeleteMapping("/contacts/delete/{id}")
   public ResponseEntity<String> deleteContact(@PathVariable int id){
     this.contactService.deleteContact(id);
     

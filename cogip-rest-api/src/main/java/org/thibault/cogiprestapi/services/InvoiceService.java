@@ -6,6 +6,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.thibault.cogiprestapi.enums.Currency;
+import org.thibault.cogiprestapi.enums.InvoiceStatus;
+import org.thibault.cogiprestapi.enums.InvoiceType;
 import org.thibault.cogiprestapi.exceptions.*;
 import org.thibault.cogiprestapi.model.Invoice;
 import org.thibault.cogiprestapi.repositories.InvoiceRepository;
@@ -34,18 +36,18 @@ public class InvoiceService {
     }
   }
   
-  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, String type, String status){
+  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status){
     List<Invoice> filteredInvoices = this.invoiceRepository.searchInvoicesByFilters(id, companyId, invoiceNumber, currency, type, status);
     if (filteredInvoices.isEmpty()) throw new ResultSetEmptyException("No invoices were found for your filters.");
     return filteredInvoices;
   }
   
-  public void addInvoice(Invoice invoice){
+  public Invoice addInvoice(Invoice invoice){
     String missingParams = missingParameters(invoice);
     if (missingParams != null) throw new ParametersMissingException(missingParams);
     
     try {
-      this.invoiceRepository.addInvoice(invoice);
+      return this.invoiceRepository.addInvoice(invoice);
     } catch (DuplicateKeyException ex){
       throw new DuplicateValueException("There is already an invoice with invoice number " + invoice.getInvoiceNumber() + " in the system.");
     }

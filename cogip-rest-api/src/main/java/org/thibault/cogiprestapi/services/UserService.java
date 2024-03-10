@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
+import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
 import org.thibault.cogiprestapi.exceptions.IdNotFoundException;
 import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
@@ -37,6 +38,10 @@ public class UserService {
     } catch (EmptyResultDataAccessException ex){
       throw new IdNotFoundException("The user with id " + id + " could not be found.");
     }
+  }
+  
+  public List<User> getUsersByFilters(Integer id, String username, UserRole role){
+    return this.userRepository.getUsersByFilters(id, username, role);
   }
   
   public User addUser(CreateUserDTO createUserDTO){

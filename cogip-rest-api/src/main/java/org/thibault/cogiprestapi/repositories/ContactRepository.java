@@ -66,7 +66,7 @@ public class ContactRepository {
     return this.jdbc.query(sqlBuilder.toString(), getContactRowMapper(),reqParams.toArray());
   }
   
-  public void addContact(Contact contact){
+  public Contact addContact(Contact contact){
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("INSERT INTO contact (firstname, lastname, phone, email, company_id)");
     sqlBuilder.append(" VALUES (?,?,?,?,?);");
@@ -77,6 +77,10 @@ public class ContactRepository {
             contact.getPhone(),
             contact.getEmail(),
             contact.getCompanyId());
+    
+    return jdbc.queryForObject("SELECT * FROM contact WHERE firstname = ? AND lastname= ? AND company_id= ?",
+            getContactRowMapper(),
+            contact.getFirstname(), contact.getLastname(), contact.getCompanyId());
   }
   
   public Contact updateContact(int id, Contact contact) throws EmptyResultDataAccessException, DataIntegrityViolationException{

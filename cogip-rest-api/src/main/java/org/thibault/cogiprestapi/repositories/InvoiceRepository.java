@@ -35,7 +35,7 @@ public class InvoiceRepository {
     return jdbc.queryForObject(sql, getInvoiceRowMapper(),id);
   }
   
-  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, String type, String status){
+  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status){
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("SELECT * FROM invoice WHERE 1=1");
     
@@ -57,18 +57,18 @@ public class InvoiceRepository {
       sqlBuilder.append(" AND currency = ?");
       reqParams.add(currency.name());
     }
-    if (type != null && !type.isEmpty()){
+    if (type != null){
       sqlBuilder.append(" AND type = ?");
-      reqParams.add(type);
+      reqParams.add(type.name());
     }
-    if (status != null && !status.isEmpty()){
+    if (status != null){
       sqlBuilder.append(" AND status = ?");
-      reqParams.add(status);
+      reqParams.add(status.name());
     }
     return jdbc.query(sqlBuilder.toString(), getInvoiceRowMapper(), reqParams.toArray());
   }
   
-  public void addInvoice(Invoice invoice) throws DataIntegrityViolationException {
+  public Invoice addInvoice(Invoice invoice) throws DataIntegrityViolationException {
     StringBuilder sqlBuilder = new StringBuilder();
     
     sqlBuilder.append("INSERT INTO invoice (company_id, contact_id, invoice_number, value, currency, type, status)");
@@ -82,6 +82,9 @@ public class InvoiceRepository {
             invoice.getCurrency().name(),
             invoice.getType().name(),
             invoice.getStatus().name());
+    
+    return jdbc.queryForObject("SELECT * FROM invoice WHERE company_id= ? AND invoice_number= ?;",
+            getInvoiceRowMapper(), invoice.getCompanyId(), invoice.getInvoiceNumber());
   }
   
   public Invoice updateInvoice(int id, Invoice invoice) throws DataIntegrityViolationException {

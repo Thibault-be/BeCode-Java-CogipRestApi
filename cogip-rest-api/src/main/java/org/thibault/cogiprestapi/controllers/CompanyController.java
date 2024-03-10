@@ -35,7 +35,7 @@ public class CompanyController {
   
   @GetMapping ("/companies/search")
   public List<Company> searchCompaniesByFilters(
-          @RequestParam (required = false) int id,
+          @RequestParam (required = false) Integer id,
           @RequestParam (required = false) String name,
           @RequestParam (required = false) String country,
           @RequestParam (required = false) String vat,
@@ -46,14 +46,12 @@ public class CompanyController {
   
   @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PostMapping ("/companies/add")
-  public ResponseEntity<String> addCompany(@RequestBody Company company){
+  public ResponseEntity<Company> addCompany(@RequestBody Company company){
     try{
-      System.out.println("in controller adding company");
-      this.companyService.addCompany(company);
+      return ResponseEntity.ok(this.companyService.addCompany(company));
     } catch (DuplicateKeyException e){
       throw new DuplicateValueException("A company with this VAT number already exists in the table");
     }
-    return ResponseEntity.ok("Company " + company.getName() + " successfully added.");
   }
   
   @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
