@@ -2,6 +2,7 @@ package org.thibault.cogiprestapi.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
@@ -43,6 +44,7 @@ public class InvoiceController {
     return this.invoiceService.searchInvoicesByFilters(id, companyId, invoiceNumber, currency, type, status);
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PostMapping ("/invoices")
   public ResponseEntity<Invoice> addInvoice(@RequestBody Invoice invoice){
     Invoice invoiceToReturn = this.invoiceService.addInvoice(invoice);
@@ -51,6 +53,7 @@ public class InvoiceController {
             .body(invoiceToReturn);
   }
   
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PutMapping ("invoices/{id}")
   public ResponseEntity<Invoice> updateInvoice(
                                       @PathVariable int id,

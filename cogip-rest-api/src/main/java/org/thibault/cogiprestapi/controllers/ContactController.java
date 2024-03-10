@@ -2,6 +2,7 @@ package org.thibault.cogiprestapi.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.model.Contact;
 import org.thibault.cogiprestapi.services.ContactService;
@@ -40,6 +41,8 @@ public class ContactController {
     return this.contactService.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }
   
+
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   @PostMapping ("/contacts")
   public ResponseEntity<Contact> addContact(@RequestBody Contact contact){
     Contact returnContact = this.contactService.addContact(contact);
@@ -50,6 +53,7 @@ public class ContactController {
   }
   
   @PutMapping ("/contacts/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   public ResponseEntity<Contact> updateContact(@PathVariable("id") int id, @RequestBody Contact contact){
     Contact updatedContact = this.contactService.updateContact(id, contact);
     
@@ -59,6 +63,7 @@ public class ContactController {
   }
   
   @DeleteMapping("/contacts/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   public ResponseEntity<String> deleteContact(@PathVariable int id){
     this.contactService.deleteContact(id);
     
