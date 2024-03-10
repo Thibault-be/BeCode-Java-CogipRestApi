@@ -19,7 +19,7 @@ public class ContactController {
   }
   
   @GetMapping ("/contacts")
-  public List<Contact> getAllContact() {
+  public List<Contact> getAllContacts() {
     return this.contactService.getAllContacts();
   }
   
@@ -40,7 +40,7 @@ public class ContactController {
     return this.contactService.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }
   
-  @PostMapping ("/contacts/add")
+  @PostMapping ("/contacts")
   public ResponseEntity<String> addContact(@RequestBody Contact contact){
     this.contactService.addContact(contact);
     
@@ -49,7 +49,7 @@ public class ContactController {
             .body("Contact " + contact.getFirstname() + " " + contact.getLastname() + " was successfully added.");
   }
   
-  @PutMapping ("/contacts/update/{id}")
+  @PutMapping ("/contacts/{id}")
   public ResponseEntity<Contact> updateContact(@PathVariable("id") int id, @RequestBody Contact contact){
     Contact updatedContact = this.contactService.updateContact(id, contact);
     
