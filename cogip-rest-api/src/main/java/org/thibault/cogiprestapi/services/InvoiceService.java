@@ -42,12 +42,12 @@ public class InvoiceService {
     return filteredInvoices;
   }
   
-  public void addInvoice(Invoice invoice){
+  public Invoice addInvoice(Invoice invoice){
     String missingParams = missingParameters(invoice);
     if (missingParams != null) throw new ParametersMissingException(missingParams);
     
     try {
-      this.invoiceRepository.addInvoice(invoice);
+      return this.invoiceRepository.addInvoice(invoice);
     } catch (DuplicateKeyException ex){
       throw new DuplicateValueException("There is already an invoice with invoice number " + invoice.getInvoiceNumber() + " in the system.");
     }

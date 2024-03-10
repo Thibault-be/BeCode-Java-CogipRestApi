@@ -68,7 +68,7 @@ public class InvoiceRepository {
     return jdbc.query(sqlBuilder.toString(), getInvoiceRowMapper(), reqParams.toArray());
   }
   
-  public void addInvoice(Invoice invoice) throws DataIntegrityViolationException {
+  public Invoice addInvoice(Invoice invoice) throws DataIntegrityViolationException {
     StringBuilder sqlBuilder = new StringBuilder();
     
     sqlBuilder.append("INSERT INTO invoice (company_id, contact_id, invoice_number, value, currency, type, status)");
@@ -82,6 +82,9 @@ public class InvoiceRepository {
             invoice.getCurrency().name(),
             invoice.getType().name(),
             invoice.getStatus().name());
+    
+    return jdbc.queryForObject("SELECT * FROM invoice WHERE company_id= ? AND invoice_number= ?;",
+            getInvoiceRowMapper(), invoice.getCompanyId(), invoice.getInvoiceNumber());
   }
   
   public Invoice updateInvoice(int id, Invoice invoice) throws DataIntegrityViolationException {

@@ -44,11 +44,11 @@ public class InvoiceController {
   }
   
   @PostMapping ("/invoices")
-  public ResponseEntity<String> addInvoice(@RequestBody Invoice invoice){
-    this.invoiceService.addInvoice(invoice);
+  public ResponseEntity<Invoice> addInvoice(@RequestBody Invoice invoice){
+    Invoice invoiceToReturn = this.invoiceService.addInvoice(invoice);
     return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body("Invoice with number " + invoice.getInvoiceNumber() + " was successfully added" );
+            .body(invoiceToReturn);
   }
   
   @PutMapping ("invoices/{id}")
