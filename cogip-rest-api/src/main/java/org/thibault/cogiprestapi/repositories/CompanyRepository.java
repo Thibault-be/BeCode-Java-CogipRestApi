@@ -60,10 +60,12 @@ public class CompanyRepository {
     return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
   
-  public void addCompany(Company company) throws DuplicateKeyException {
+  public Company addCompany(Company company) throws DuplicateKeyException {
     String sql = "INSERT INTO company (name, country, vat, type) " +
             "VALUES (?, ?, ?, ?);";
     jdbc.update(sql, company.getName(), company.getCountry(), company.getVat(), company.getType().name());
+    
+    return jdbc.queryForObject("SELECT * FROM company WHERE vat=?;", getCompanyRowMapper(),company.getVat());
   }
   
   public void deleteCompany(int id){

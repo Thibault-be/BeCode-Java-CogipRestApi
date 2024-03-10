@@ -41,12 +41,12 @@ public class CompanyService {
     return filteredCompanies;
   }
   
-  public void addCompany(Company company){
+  public Company addCompany(Company company){
     String missingParams = missingParameters(company);
     if (missingParams != null) throw new ParametersMissingException(missingParams);
     
     try{
-      this.companyRepository.addCompany(company);
+      return this.companyRepository.addCompany(company);
     } catch (DuplicateKeyException e){
       throw new DuplicateValueException("A company with vat number " + company.getVat() + " already exists.");
     }
@@ -67,7 +67,6 @@ public class CompanyService {
   
   private String missingParameters(Company company){
     StringBuilder params = new StringBuilder();
-    System.out.println("in params");
     params.append("These are the missing parameters:\n");
     boolean flag = false;
     if (company.getName() == null || company.getName().isEmpty()){
