@@ -43,12 +43,12 @@ public class ContactService {
     return filteredContacts;
   }
   
-  public void addContact(Contact contact){
+  public Contact addContact(Contact contact){
     String allFields = parametersMissing(contact);
     System.out.println(allFields);
     if (allFields != null) throw new ParametersMissingException(allFields);
     
-    this.contactRepository.addContact(contact);
+    return this.contactRepository.addContact(contact);
   }
   
   public Contact updateContact(int id, Contact contact){

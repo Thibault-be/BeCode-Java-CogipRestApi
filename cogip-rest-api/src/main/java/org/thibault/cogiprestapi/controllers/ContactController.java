@@ -41,12 +41,12 @@ public class ContactController {
   }
   
   @PostMapping ("/contacts")
-  public ResponseEntity<String> addContact(@RequestBody Contact contact){
-    this.contactService.addContact(contact);
+  public ResponseEntity<Contact> addContact(@RequestBody Contact contact){
+    Contact returnContact = this.contactService.addContact(contact);
     
     return ResponseEntity
             .status(HttpStatus.OK)
-            .body("Contact " + contact.getFirstname() + " " + contact.getLastname() + " was successfully added.");
+            .body(returnContact);
   }
   
   @PutMapping ("/contacts/{id}")
@@ -58,7 +58,7 @@ public class ContactController {
             .body(updatedContact);
   }
   
-  @DeleteMapping("/contacts/delete/{id}")
+  @DeleteMapping("/contacts/{id}")
   public ResponseEntity<String> deleteContact(@PathVariable int id){
     this.contactService.deleteContact(id);
     
