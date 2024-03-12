@@ -44,7 +44,7 @@ public class InvoiceController {
     return this.invoiceService.searchInvoicesByFilters(id, companyId, invoiceNumber, currency, type, status);
   }
   
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @PostMapping ("/invoices")
   public ResponseEntity<Invoice> addInvoice(@RequestBody Invoice invoice){
     Invoice invoiceToReturn = this.invoiceService.addInvoice(invoice);
@@ -53,7 +53,7 @@ public class InvoiceController {
             .body(invoiceToReturn);
   }
   
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @PutMapping ("invoices/{id}")
   public ResponseEntity<Invoice> updateInvoice(
                                       @PathVariable int id,

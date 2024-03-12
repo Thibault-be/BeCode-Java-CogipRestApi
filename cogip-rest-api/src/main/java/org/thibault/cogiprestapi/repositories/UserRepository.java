@@ -4,7 +4,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
@@ -12,12 +11,14 @@ import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
 import org.thibault.cogiprestapi.model.User;
+import org.thibault.cogiprestapi.security.UserEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -44,6 +45,12 @@ public class UserRepository {
     String sql = "SELECT * FROM user WHERE id= ?";
     User userById = jdbc.queryForObject(sql, getUserRowMapper(), id );
     return userById;
+  }
+  
+  public Optional<User> findByUsername(String username ){
+    String sql = "SELECT * FROM user where username= ?";
+    Optional<User> user = Optional.ofNullable(jdbc.queryForObject(sql, getUserRowMapper(), username));
+    return user;
   }
   
   public List<User> getUsersByFilters(Integer id, String username, UserRole role){

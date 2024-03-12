@@ -41,8 +41,7 @@ public class ContactController {
     return this.contactService.getContactsByFilters(id, firstname, lastname, phone, companyId);
   }
   
-
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @PostMapping ("/contacts")
   public ResponseEntity<Contact> addContact(@RequestBody Contact contact){
     Contact returnContact = this.contactService.addContact(contact);
@@ -52,8 +51,8 @@ public class ContactController {
             .body(returnContact);
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @PutMapping ("/contacts/{id}")
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   public ResponseEntity<Contact> updateContact(@PathVariable("id") int id, @RequestBody Contact contact){
     Contact updatedContact = this.contactService.updateContact(id, contact);
     
@@ -62,8 +61,8 @@ public class ContactController {
             .body(updatedContact);
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @DeleteMapping("/contacts/{id}")
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
   public ResponseEntity<String> deleteContact(@PathVariable int id){
     this.contactService.deleteContact(id);
     

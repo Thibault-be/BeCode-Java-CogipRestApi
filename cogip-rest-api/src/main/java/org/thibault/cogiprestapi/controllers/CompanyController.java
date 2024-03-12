@@ -44,7 +44,7 @@ public class CompanyController {
     return this.companyService.searchCompaniesByFilters(id, name, country, vat, type);
   }
   
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @PostMapping ("/companies/add")
   public ResponseEntity<Company> addCompany(@RequestBody Company company){
     try{
@@ -54,14 +54,14 @@ public class CompanyController {
     }
   }
   
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @DeleteMapping ("/companies/{id}")
   public ResponseEntity<String> deleteCompany(@PathVariable int id){
     this.companyService.deleteCompany(id);
     return ResponseEntity.ok("Company with company_id " + id + " was successfully deleted.");
   }
   
-  @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTANT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @PutMapping ("/companies/{id}")
   public ResponseEntity<Company> updateCompany(@PathVariable int id,
                                               @RequestBody Company company){

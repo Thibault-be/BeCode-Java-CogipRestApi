@@ -3,12 +3,16 @@ package org.thibault.cogiprestapi.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.exceptions.IllegalParametersException;
 import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
+import org.thibault.cogiprestapi.security.UserCredentials;
 import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
 
@@ -21,13 +25,20 @@ import java.util.stream.Collectors;
 public class UserController {
   
   private final UserService userService;
+  private final AuthenticationManager authenticationManager;
   
-  public UserController(UserService userService){
+  public UserController(UserService userService, AuthenticationManager authenticationManager){
     this.userService = userService;
+    this.authenticationManager = authenticationManager;
   }
   
   @GetMapping ("/users")
-  public List<UserDTO> getAllUsers(){
+  public List<UserDTO> getAllUsers(@RequestBody UserCredentials credentials ){
+    
+    Authentication authentication = authenticationManager
+            .authenticate(new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
+    
+    
     List<UserDTO> userDTOs = new ArrayList<>();
     this.userService.getAllUsers().forEach(
             user -> {
@@ -59,7 +70,7 @@ public class UserController {
     return userDTOs;
   }
   
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping ("/users")
   public ResponseEntity<UserDTO> addUser(@RequestBody CreateUserDTO createUserDTO){
     User addedToRepositoryUser = this.userService.addUser(createUserDTO);
@@ -70,7 +81,7 @@ public class UserController {
             .body(addedUserDTO);
   }
   
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PutMapping("/users/{id}")
   public ResponseEntity<UserDTO> updateUser(@PathVariable int id,
                               @RequestBody CreateUserDTO createUserDTO){
@@ -82,7 +93,7 @@ public class UserController {
             .body(updatedUserDTO);
   }
   
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping ("users/{id}")
   public ResponseEntity<String> deleteUser(@PathVariable("id") int id){
     this.userService.deleteUser(id);
