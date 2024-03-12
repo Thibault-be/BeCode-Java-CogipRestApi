@@ -23,12 +23,17 @@ import java.util.List;
 public class UserRepository {
   
   private final JdbcTemplate jdbc;
-  private final PasswordEncoder passwordEncoder;
+  //private final PasswordEncoder passwordEncoder;
   
-  public UserRepository(JdbcTemplate jdbc, PasswordEncoder passwordEncoder){
+//  public UserRepository(JdbcTemplate jdbc, PasswordEncoder passwordEncoder){
+//    this.jdbc = jdbc;
+//    this.passwordEncoder = passwordEncoder;
+//  }
+  
+  public UserRepository(JdbcTemplate jdbc){
     this.jdbc = jdbc;
-    this.passwordEncoder = passwordEncoder;
   }
+  
   
   public List<User> getAllUsers(){
     String sql = "SELECT * FROM user;";
@@ -70,7 +75,8 @@ public class UserRepository {
     
       jdbc.update(sql,
               user.getUsername(),
-              passwordEncoder.encode(user.getPassword()),
+              //passwordEncoder.encode(user.getPassword()),
+              user.getPassword(),
               user.getRole().name());
     
     String returnSql = "SELECT * FROM user WHERE username = ?";
@@ -93,7 +99,8 @@ public class UserRepository {
     }
     
     if(createUserDTO.getPassword() != null && !createUserDTO.getPassword().isEmpty()){
-      password = passwordEncoder.encode(createUserDTO.getPassword());
+      //password = passwordEncoder.encode(createUserDTO.getPassword());
+      password = createUserDTO.getPassword();
     }
     
     if(createUserDTO.getRole() != null){

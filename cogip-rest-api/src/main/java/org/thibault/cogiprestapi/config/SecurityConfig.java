@@ -32,27 +32,30 @@ public class SecurityConfig {
   public PasswordEncoder passwordEncoder(){
     return new BCryptPasswordEncoder();
   }
-  
+
   @Bean
   public UserDetailsService userDetailsService(){
     UserDetails admin = User.builder()
             .username("admin")
-            .password(passwordEncoder().encode("admin"))
+            //.password(passwordEncoder().encode("admin"))
+            .password("admin")
             .roles("ADMIN")
             .build();
-    
+
     UserDetails accountant = User.builder()
             .username("accountant")
-            .password(passwordEncoder().encode("accountant"))
+            //.password(passwordEncoder().encode("accountant"))
+            .password("accountant")
             .roles("ACCOUNTANT")
             .build();
-    
+
     UserDetails intern = User.builder()
             .username("intern")
-            .password(passwordEncoder().encode("intern"))
+            //.password(passwordEncoder().encode("intern"))
+            .password("intern")
             .roles("INTERN")
             .build();
-    
+
     return new InMemoryUserDetailsManager(admin, accountant, intern);
   }
 }
