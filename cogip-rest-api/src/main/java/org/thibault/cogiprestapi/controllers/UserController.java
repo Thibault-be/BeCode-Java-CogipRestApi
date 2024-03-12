@@ -25,18 +25,15 @@ import java.util.stream.Collectors;
 public class UserController {
   
   private final UserService userService;
-  private final AuthenticationManager authenticationManager;
+  //private final AuthenticationManager authenticationManager;
   
-  public UserController(UserService userService, AuthenticationManager authenticationManager){
+  public UserController(UserService userService){ //, AuthenticationManager authenticationManager){
     this.userService = userService;
-    this.authenticationManager = authenticationManager;
+    //this.authenticationManager = authenticationManager;
   }
   
   @GetMapping ("/users")
   public List<UserDTO> getAllUsers(@RequestBody UserCredentials credentials ){
-    
-    Authentication authentication = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
     
     
     List<UserDTO> userDTOs = new ArrayList<>();
