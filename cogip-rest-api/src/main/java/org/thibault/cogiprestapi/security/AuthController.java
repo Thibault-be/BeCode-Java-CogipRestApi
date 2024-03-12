@@ -66,20 +66,5 @@ public class AuthController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String token = this.jwtGenerator.generateToken(authentication);
     return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
-    
-//    // Retrieve user from the database based on the provided username
-//    Optional<User> optionalUser = Optional.ofNullable(userRepository.getUsersByFilters(null, credentials.getUsername(), null).get(0));
-//
-//    if (optionalUser.isPresent()) {
-//      User user = optionalUser.get();
-//      // Check if the provided password matches the password stored in the database
-//      if (user.getPassword().equals(credentials.getPassword())) {
-//        return "Login successful";
-//      } else {
-//        return "Invalid password";
-//      }
-//    } else {
-//      return "User not found";
-//    }
   }
 }
