@@ -28,12 +28,11 @@ public class CustomerUserDetailsService implements UserDetailsService {
   
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    System.out.println("in load by username");
     User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-    System.out.println("username in load by username: " + user.getUsername());
-    System.out.println("pw in loadbyusername: " + user.getPassword());
+    System.out.println("Username in load by username: " + user.getUsername());
+    System.out.println("Password in loadbyusername: " + user.getPassword());
     List<GrantedAuthority> list = mapRoleToAuthorities(user.getRole());
-    System.out.println(list);
+    System.out.println("Granted Authorities: " + list);
     return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRoleToAuthorities(user.getRole()) );
   }
   
