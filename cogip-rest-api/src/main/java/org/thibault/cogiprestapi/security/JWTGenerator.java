@@ -42,9 +42,13 @@ public class JWTGenerator {
   
   public boolean validateToken(String token){
     try{
+      System.out.println("First line in validate token and printing it:");
+      System.out.println(token);
       Jwts.parser().setSigningKey(SecurityConstants.JWT_SECRET).build().parseSignedClaims(token);
+      System.out.println("After parser in validate token. About to return true.");
       return true;
     } catch (Exception e) {
+      System.out.println("Validate token failed: " + e.getMessage());
       throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
       
     }
