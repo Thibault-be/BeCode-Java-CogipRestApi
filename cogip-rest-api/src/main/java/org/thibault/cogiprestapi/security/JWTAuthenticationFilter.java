@@ -37,7 +37,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
       System.out.println("Now going to obtain the UsernamePasswordAuthenticationToken:");
       System.out.println("Printing userDetails.getAuthorities(): " + userDetails.getAuthorities().toString());
       System.out.println("printing userdetails: " + userDetails);
+      
+      //*******************this is what it has to be***************************
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+      
       System.out.println("credentials: " + authenticationToken.getCredentials());
       System.out.println("Printing the authenticationToken:\n" + authenticationToken);
       
