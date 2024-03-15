@@ -23,16 +23,19 @@ public class CompanyController {
     this.companyService = companyService;
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/companies")
   public List<Company> getAllCompanies(){
     return this.companyService.getAllCompanies();
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/companies/{id}")
   public Company getCompanyById(@PathVariable("id") int id){
     return this.companyService.getCompanyById(id);
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/companies/search")
   public List<Company> searchCompaniesByFilters(
           @RequestParam (required = false) Integer id,

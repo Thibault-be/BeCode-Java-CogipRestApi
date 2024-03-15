@@ -28,11 +28,13 @@ public class InvoiceController {
     return this.invoiceService.getAllInvoices();
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping("invoices/{id}")
   public Invoice getInvoiceById(@PathVariable("id") int id){
     return this.invoiceService.getInvoiceById(id);
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/invoices/search")
   public List<Invoice> searchInvoicesByFilters(
           @RequestParam (required = false) Integer id,

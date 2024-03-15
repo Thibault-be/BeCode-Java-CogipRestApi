@@ -19,17 +19,19 @@ public class ContactController {
     this.contactService = contactService;
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/contacts")
   public List<Contact> getAllContacts() {
     return this.contactService.getAllContacts();
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/contacts/{id}")
   public Contact getContactById(@PathVariable("id") int id){
     return this.contactService.getContactById(id);
   }
   
-  
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/contacts/search")
   public List<Contact> getContactsByFilters(
                           @RequestParam (required = false) Integer id,

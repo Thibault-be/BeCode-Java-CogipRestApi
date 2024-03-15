@@ -32,9 +32,9 @@ public class UserController {
     //this.authenticationManager = authenticationManager;
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/users")
   public List<UserDTO> getAllUsers(@RequestBody UserCredentials credentials ){
-    
     
     List<UserDTO> userDTOs = new ArrayList<>();
     this.userService.getAllUsers().forEach(
@@ -45,11 +45,13 @@ public class UserController {
     return userDTOs;
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/users/{id}")
   public UserDTO getUserById(@PathVariable("id") int id){
     return mapUserToDTO(this.userService.getUserById(id));
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/users/search")
   public List<UserDTO> getUsersByFilters(@RequestParam (required = false) Integer id,
                                          @RequestParam (required = false) String username,
