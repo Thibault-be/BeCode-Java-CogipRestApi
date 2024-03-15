@@ -22,6 +22,7 @@ public class InvoiceController {
     this.invoiceService = invoiceService;
   }
   
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/invoices")
   public List<Invoice> getAllInvoices(){
     return this.invoiceService.getAllInvoices();
