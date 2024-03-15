@@ -33,8 +33,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
       String username = tokenGenerator.getUsernameFromJWT(token);
       System.out.println("In JWTAuthenticationFilter about to load UserDetails by calling customerUserDetailsService.loadUserByUsername");
       UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
-      UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
       System.out.println("Back in JWTAuthenticationFilter. UserDetails was successful");
+      System.out.println("Now going to obtain the UsernamePasswordAuthenticationToken:");
+      UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
       System.out.println("Printing the authenticationToken:\n" + authenticationToken);
       
       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

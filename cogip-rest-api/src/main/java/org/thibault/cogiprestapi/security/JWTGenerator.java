@@ -45,6 +45,7 @@ public class JWTGenerator {
       System.out.println("First line in validate token and printing it:");
       System.out.println(token);
       Jwts.parser().setSigningKey(SecurityConstants.JWT_SECRET).build().parseSignedClaims(token);
+      System.out.println(Jwts.parser().setSigningKey(SecurityConstants.JWT_SECRET).build().parseSignedClaims(token));
       System.out.println("After parser in validate token. About to return true.");
       return true;
     } catch (Exception e) {
