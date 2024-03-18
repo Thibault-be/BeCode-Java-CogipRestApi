@@ -7,15 +7,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
-import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
-import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
 import org.thibault.cogiprestapi.model.User;
-import org.thibault.cogiprestapi.security.UserEntity;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +68,6 @@ public class UserRepository {
     
       jdbc.update(sql,
               user.getUsername(),
-              //passwordEncoder.encode(user.getPassword()),
               user.getPassword(),
               user.getRole().name());
     
@@ -99,7 +91,6 @@ public class UserRepository {
     }
     
     if(createUserDTO.getPassword() != null && !createUserDTO.getPassword().isEmpty()){
-      //password = passwordEncoder.encode(createUserDTO.getPassword());
       password = createUserDTO.getPassword();
     }
     

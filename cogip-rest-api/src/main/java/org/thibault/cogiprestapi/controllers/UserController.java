@@ -9,7 +9,6 @@ import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.exceptions.IllegalParametersException;
 import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
-import org.thibault.cogiprestapi.security.UserCredentials;
 import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
 import java.util.ArrayList;
@@ -56,9 +55,7 @@ public class UserController {
               UserDTO mappedUser = mapUserToDTO(user);
               userDTOs.add(mappedUser);
             });
-    
     if (userDTOs.isEmpty()) throw new ResultSetEmptyException("No matches for your search criteria.");
-    
     return userDTOs;
   }
   
@@ -94,7 +91,6 @@ public class UserController {
             .status(HttpStatus.OK)
             .body("User with id " + id + " has been deleted.");
   }
-  
   
   private UserDTO mapUserToDTO(User user){
     return new UserDTO(user.getId(), user.getUsername(), user.getRole());

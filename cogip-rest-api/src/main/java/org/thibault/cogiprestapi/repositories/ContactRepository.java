@@ -6,9 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.model.Contact;
-
-import javax.xml.transform.Result;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +20,11 @@ public class ContactRepository {
   
   public List<Contact> getAllContacts(){
     String sql = "SELECT * FROM contact;";
-    
     return jdbc.query(sql, getContactRowMapper()) ;
   }
   
   public Contact getContactById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM contact where id = ?";
-    
     return jdbc.queryForObject(sql, getContactRowMapper(), id);
   }
   

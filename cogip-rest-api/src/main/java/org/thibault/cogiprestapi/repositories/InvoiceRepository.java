@@ -1,17 +1,14 @@
 package org.thibault.cogiprestapi.repositories;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
 import org.thibault.cogiprestapi.enums.InvoiceType;
 import org.thibault.cogiprestapi.model.Invoice;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +117,6 @@ public class InvoiceRepository {
                 status.name(),
                 id
             );
-    
     String updatedInvoice = "SELECT * from invoice WHERE id = ?";
     return jdbc.queryForObject(updatedInvoice, getInvoiceRowMapper(), id);
   }

@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
-import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.services.CompanyService;
 
