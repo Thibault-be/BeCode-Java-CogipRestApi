@@ -12,17 +12,15 @@ import org.thibault.cogiprestapi.model.User;
 import org.thibault.cogiprestapi.repositories.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class CustomerUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
   
   private UserRepository userRepository;
   private PasswordEncoder passwordEncoder;
   
-  public CustomerUserDetailsService(UserRepository userRepository ) {
+  public CustomUserDetailsService(UserRepository userRepository ) {
     this.userRepository = userRepository;
   }
   
