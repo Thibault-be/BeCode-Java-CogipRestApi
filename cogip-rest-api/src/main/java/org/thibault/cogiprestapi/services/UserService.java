@@ -3,6 +3,7 @@ package org.thibault.cogiprestapi.services;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
@@ -20,9 +21,11 @@ import java.util.List;
 public class UserService {
   
   private UserRepository userRepository;
+  private PasswordEncoder passwordEncoder;
   
-  public UserService(UserRepository userRepository){
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
     this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   public List<User> getAllUsers(){
@@ -47,8 +50,10 @@ public class UserService {
   public User addUser(CreateUserDTO createUserDTO){
     String allFields = parametersMissing(createUserDTO);
     if (allFields != null) throw new ParametersMissingException(allFields);
-    
     try{
+      String passwordToEncode = createUserDTO.getPassword();
+      String encodedPassword = this.passwordEncoder.encode(passwordToEncode);
+      createUserDTO.setPassword(encodedPassword);
       return this.userRepository.addUser(createUserDTO);
     } catch (DataIntegrityViolationException dive){
       throw new DuplicateValueException("The username " + createUserDTO.getUsername() + " is already taken. Please choose another username.");
