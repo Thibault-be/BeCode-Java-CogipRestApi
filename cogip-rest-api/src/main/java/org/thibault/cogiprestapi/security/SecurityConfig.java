@@ -52,30 +52,6 @@ public class SecurityConfig {
     return new JWTAuthenticationFilter();
   }
   
-  
-//  @Bean
-//  public UserDetailsService users(){
-//    UserDetails admin = User.builder()
-//            .username("admin")
-//            .password("admin")
-//            .roles("ADMIN")
-//            .build();
-//
-//    UserDetails intern = User.builder()
-//            .username("intern")
-//            .password("intern")
-//            .roles("intern")
-//            .build();
-//
-//    UserDetails accountant = User.builder()
-//            .username("accountant")
-//            .password("accountant")
-//            .roles("accountant")
-//            .build();
-//
-//    return new InMemoryUserDetailsManager(admin, intern, accountant);
-//  }
-  
   @Bean
   public AuthenticationManager authenticationManager (AuthenticationConfiguration authenticationConfiguration) throws Exception{
     return authenticationConfiguration.getAuthenticationManager();
@@ -83,9 +59,7 @@ public class SecurityConfig {
   
   @Bean
   PasswordEncoder passwordEncoder(){
-    
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     return passwordEncoder;
   }
-  
 }
