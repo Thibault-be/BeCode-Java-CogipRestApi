@@ -1,8 +1,6 @@
 package org.thibault.cogiprestapi.security;
 
-
 import org.thibault.cogiprestapi.enums.UserRole;
-
 
 public class UserCredentials {
   

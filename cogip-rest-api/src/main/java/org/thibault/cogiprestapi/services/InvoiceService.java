@@ -1,6 +1,5 @@
 package org.thibault.cogiprestapi.services;
 
-import ch.qos.logback.core.boolex.EvaluationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;

@@ -27,29 +27,16 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                   HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
     String token = getJWTfromRequest(request);
-    System.out.println("In JWTAuthfilter printing the token obtained from the request:\n" + token);
     
     if (StringUtils.hasText(token) && this.tokenGenerator.validateToken(token)){
       String username = tokenGenerator.getUsernameFromJWT(token);
-      System.out.println("In JWTAuthenticationFilter about to load UserDetails by calling customerUserDetailsService.loadUserByUsername");
       UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
-      System.out.println("Back in JWTAuthenticationFilter. UserDetails was successful");
-      System.out.println("Now going to obtain the UsernamePasswordAuthenticationToken:");
-      System.out.println("Printing userDetails.getAuthorities(): " + userDetails.getAuthorities().toString());
-      System.out.println("printing userdetails: " + userDetails);
-      
-      //*******************this is what it has to be***************************
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-      
-      System.out.println("credentials: " + authenticationToken.getCredentials());
-      System.out.println("Printing the authenticationToken:\n" + authenticationToken);
       
       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
-    
     filterChain.doFilter(request, response);
-    
   }
   
   private String getJWTfromRequest(HttpServletRequest request){

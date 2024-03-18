@@ -6,7 +6,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
-import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
 import org.thibault.cogiprestapi.exceptions.IdNotFoundException;
