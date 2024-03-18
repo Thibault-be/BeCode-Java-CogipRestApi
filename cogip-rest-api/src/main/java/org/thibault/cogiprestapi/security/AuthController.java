@@ -3,7 +3,6 @@ package org.thibault.cogiprestapi.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,10 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
-import org.thibault.cogiprestapi.model.User;
 import org.thibault.cogiprestapi.repositories.UserRepository;
-
-import java.util.Optional;
 
 @RestController
 public class AuthController {
@@ -38,22 +34,12 @@ public class AuthController {
   @PostMapping ("/register")
   public ResponseEntity<String> register(@RequestBody UserCredentials userCredentials){
     
-    System.out.println("in authcontoller register");
-    System.out.println("credentials username: " + userCredentials.getUsername());
-    System.out.println("credentials password: " + userCredentials.getPassword());
-    System.out.println("credentials role: " + userCredentials.getRole().name());
-    
     CreateUserDTO userEntity = new CreateUserDTO();
     userEntity.setUsername(userCredentials.getUsername());
     userEntity.setPassword(this.passwordEncoder.encode(userCredentials.getPassword()));
     userEntity.setRole(userCredentials.getRole());
     
-    System.out.println("entity username: " + userEntity.getUsername());
-    System.out.println("entity password: " + userEntity.getPassword());
-    System.out.println("entity role: " + userEntity.getRole().name());
-    
     this.userRepository.addUser(userEntity);
-    
     return new ResponseEntity<>("Registered successfully", HttpStatus.OK);
   }
   
