@@ -25,7 +25,7 @@ public class UserController {
     this.userService = userService;
   }
   
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @GetMapping ("/users")
   public List<UserDTO> getAllUsers(){
     List<UserDTO> userDTOs = new ArrayList<>();
@@ -37,13 +37,13 @@ public class UserController {
     return userDTOs;
   }
   
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @GetMapping ("/users/{id}")
   public UserDTO getUserById(@PathVariable("id") int id){
     return mapUserToDTO(this.userService.getUserById(id));
   }
   
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @GetMapping ("/users/search")
   public List<UserDTO> getUsersByFilters(@RequestParam (required = false) Integer id,
                                          @RequestParam (required = false) String username,
