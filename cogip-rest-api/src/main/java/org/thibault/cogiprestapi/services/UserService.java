@@ -62,6 +62,11 @@ public class UserService {
   
   public User updateUser(int id, CreateUserDTO createUserDTO){
     try{
+      if (createUserDTO.getPassword() != null){
+        String passwordToEncode = createUserDTO.getPassword();
+        String encodedPassword = this.passwordEncoder.encode(passwordToEncode);
+        createUserDTO.setPassword(encodedPassword);
+      }
       return this.userRepository.updateUser(id, createUserDTO);
     } catch (EmptyResultDataAccessException mtre){
       throw new IdNotFoundException("User with id " + id + " could not be found.");
