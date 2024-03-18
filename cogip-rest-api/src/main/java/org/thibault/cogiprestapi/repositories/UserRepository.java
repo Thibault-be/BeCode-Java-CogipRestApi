@@ -24,17 +24,10 @@ import java.util.Optional;
 public class UserRepository {
   
   private final JdbcTemplate jdbc;
-  //private final PasswordEncoder passwordEncoder;
-  
-//  public UserRepository(JdbcTemplate jdbc, PasswordEncoder passwordEncoder){
-//    this.jdbc = jdbc;
-//    this.passwordEncoder = passwordEncoder;
-//  }
   
   public UserRepository(JdbcTemplate jdbc){
     this.jdbc = jdbc;
   }
-  
   
   public List<User> getAllUsers(){
     String sql = "SELECT * FROM user;";

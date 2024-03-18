@@ -24,13 +24,11 @@ public class UserController {
   
   public UserController(UserService userService){
     this.userService = userService;
-
   }
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/users")
-  public List<UserDTO> getAllUsers(@RequestBody UserCredentials credentials ){
-    
+  public List<UserDTO> getAllUsers(){
     List<UserDTO> userDTOs = new ArrayList<>();
     this.userService.getAllUsers().forEach(
             user -> {
