@@ -3,9 +3,6 @@ package org.thibault.cogiprestapi.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
@@ -15,21 +12,19 @@ import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.security.UserCredentials;
 import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping
 public class UserController {
   
   private final UserService userService;
-  //private final AuthenticationManager authenticationManager;
   
-  public UserController(UserService userService){ //, AuthenticationManager authenticationManager){
+  public UserController(UserService userService){
     this.userService = userService;
-    //this.authenticationManager = authenticationManager;
+
   }
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
@@ -106,7 +101,6 @@ public class UserController {
   private UserDTO mapUserToDTO(User user){
     return new UserDTO(user.getId(), user.getUsername(), user.getRole());
   }
-  
   private User mapCreateUserDtoToUser(CreateUserDTO createUserDTO){
     return new User(createUserDTO.getUsername(), createUserDTO.getPassword(), createUserDTO.getRole());
   }
