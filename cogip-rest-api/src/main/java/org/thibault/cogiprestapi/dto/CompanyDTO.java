@@ -1,7 +1,5 @@
 package org.thibault.cogiprestapi.dto;
 
-import org.springframework.security.core.parameters.P;
-
 import java.util.List;
 
 public class CompanyDTO {
@@ -10,7 +8,7 @@ public class CompanyDTO {
   private String country;
   private String vat;
   private List<Integer> invoices;
-  private String contact;
+  private List<String> contacts;
   
   public CompanyDTO(){}
   
@@ -46,11 +44,11 @@ public class CompanyDTO {
     this.invoices = invoices;
   }
   
-  public String getContact() {
-    return contact;
+  public List<String> getContacts() {
+    return contacts;
   }
   
-  public void setContact(String contact) {
-    this.contact = contact;
+  public void setContacts(List<String> contacts) {
+    this.contacts = contacts;
   }
 }

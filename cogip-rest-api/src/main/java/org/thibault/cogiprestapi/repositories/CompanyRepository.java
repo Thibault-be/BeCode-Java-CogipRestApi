@@ -5,9 +5,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.thibault.cogiprestapi.dto.CompanyDTO;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.model.Company;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +24,14 @@ public class CompanyRepository {
     this.jdbc = jdbc;
   }
   
-  public List<Company> getAllCompanies(){
-    String sql = "SELECT * FROM company;";
-    return jdbc.query(sql, getCompanyRowMapper());
+  public List<CompanyDTO> getAllCompanies(){
+    //String sql = "SELECT * FROM company;";
+    String sql = getAllCompaniesString();
+    //return jdbc.query(sql, getCompanyRowMapper());
+    
+    List<Object> reqParams = new ArrayList<>();
+    
+    return getListOfCompanies(sql, reqParams);
   }
   
   public Company getCompanyById(int id) throws EmptyResultDataAccessException {
@@ -119,4 +128,76 @@ public class CompanyRepository {
     };
     return companyRowMapper;
   }
+  
+  private List<CompanyDTO> getListOfCompanies(String sql){
+    List<CompanyDTO> companies = new ArrayList<>();
+    return companies;
+  }
+  
+  private List<CompanyDTO> getListOfCompanies(String sql, List<Object> reqParams){
+    List<CompanyDTO> companies = new ArrayList<>();
+    
+  this.jdbc.query(connection -> {
+      PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+      
+      // Set parameters for the prepared statement
+      int index = 1;
+      for (Object reqParam : reqParams){
+        preparedStatement.setObject(index++, reqParam);
+      }
+      return preparedStatement;
+    },
+    rs -> {
+    do {
+      CompanyDTO company = extractCompanyFromResultSet(rs);
+      companies.add(company);
+    } while (rs.next());
+    }
+            );
+  return companies;
+  }
+  
+  private CompanyDTO extractCompanyFromResultSet(ResultSet resultSet) throws SQLException {
+    CompanyDTO company = new CompanyDTO();
+    
+    List<Integer> invoices = new ArrayList<>();
+    List<String> contacts = new ArrayList<>();
+    
+    company.setName(resultSet.getString("name"));
+    company.setCountry(resultSet.getString("country"));
+    company.setVat(resultSet.getString("vat"));
+    
+    int idCurrent = resultSet.getInt("id");
+    int idNext = idCurrent;
+    
+    while (idCurrent == idNext){
+      invoices.add(resultSet.getInt("invoice_number"));
+      
+      if (!contacts.contains(resultSet.getString("contact"))){
+        contacts.add(resultSet.getString("contact"));
+      }
+      if (resultSet.next()){
+        idNext = resultSet.getInt("id");
+      }else{
+        idNext = 0;
+      }
+      
+      if (idCurrent != idNext){
+        resultSet.previous();
+      }
+    }
+    company.setInvoices(invoices);
+    company.setContacts(contacts);
+    
+    return company;
+  }
+  
+  
+  private String getAllCompaniesString(){
+    return "SELECT company.id, name, country, vat, company.type, invoice_number, concat(firstname, ' ', lastname) as contact FROM company " +
+            "INNER JOIN invoice ON company.id = invoice.company_id " +
+            "INNER JOIN contact ON company.id = contact.company_id";
+  }
+  
+  
 }

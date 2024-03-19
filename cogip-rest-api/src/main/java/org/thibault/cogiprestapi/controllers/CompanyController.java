@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.thibault.cogiprestapi.dto.CompanyDTO;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.exceptions.DuplicateValueException;
 import org.thibault.cogiprestapi.model.Company;
@@ -24,7 +25,7 @@ public class CompanyController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/companies")
-  public List<Company> getAllCompanies(){
+  public List<CompanyDTO> getAllCompanies(){
     return this.companyService.getAllCompanies();
   }
   

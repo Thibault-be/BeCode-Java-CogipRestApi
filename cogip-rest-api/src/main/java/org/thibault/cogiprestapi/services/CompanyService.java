@@ -3,6 +3,7 @@ package org.thibault.cogiprestapi.services;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.thibault.cogiprestapi.dto.CompanyDTO;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.exceptions.*;
 import org.thibault.cogiprestapi.model.Company;
@@ -18,8 +19,8 @@ public class CompanyService {
     this.companyRepository = companyRepository;
   }
   
-  public List<Company> getAllCompanies(){
-    List<Company> allCompanies = this.companyRepository.getAllCompanies();
+  public List<CompanyDTO> getAllCompanies(){
+    List<CompanyDTO> allCompanies = this.companyRepository.getAllCompanies();
     if (allCompanies.isEmpty()) throw new ResultSetEmptyException("No companies were found.");
     return allCompanies;
   }
