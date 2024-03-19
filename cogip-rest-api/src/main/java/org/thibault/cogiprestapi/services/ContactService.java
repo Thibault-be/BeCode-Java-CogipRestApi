@@ -3,6 +3,7 @@ package org.thibault.cogiprestapi.services;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.thibault.cogiprestapi.dto.ContactDTO;
 import org.thibault.cogiprestapi.exceptions.IdNotFoundException;
 import org.thibault.cogiprestapi.exceptions.IllegalParametersException;
 import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
@@ -21,8 +22,8 @@ public class ContactService {
     this.contactRepository = contactRepository;
   }
   
-  public List<Contact> getAllContacts(){
-    List<Contact> allContacts = this.contactRepository.getAllContacts();
+  public List<ContactDTO> getAllContacts(){
+    List<ContactDTO> allContacts = this.contactRepository.getAllContacts();
     if (allContacts.isEmpty()) throw new ResultSetEmptyException("There were no contacts found.");
     return allContacts;
   }

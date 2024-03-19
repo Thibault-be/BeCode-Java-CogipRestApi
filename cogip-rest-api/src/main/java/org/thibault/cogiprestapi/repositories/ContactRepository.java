@@ -145,8 +145,27 @@ public class ContactRepository {
     RowMapper<ContactDTO> contactDTORowMapper = (ResultSet, i) -> {
       ContactDTO rowObject = new ContactDTO();
       
-      rowObject.
-    }
+      List<Integer> invoices = new ArrayList<>();
+      
+      rowObject.setFirstname(ResultSet.getString("firstname"));
+      rowObject.setLastname(ResultSet.getString("lastname"));
+      rowObject.setEmail(ResultSet.getString("email"));
+      rowObject.setPhone(ResultSet.getString("phone"));
+      rowObject.setCompanyName(ResultSet.getString("company_name"));
+      
+      String companyOriginal = ResultSet.getString("company_name");
+      String companyNext = "";
+      while (companyOriginal.equals(companyNext)){
+        invoices.add(ResultSet.getInt("invoice_number"));
+        ResultSet.next();
+        companyNext = ResultSet.getString("company_name");
+      }
+      
+      rowObject.setInvoiceNumbers(invoices);
+      
+      return rowObject;
+    };
+    return contactDTORowMapper;
   }
   
 }

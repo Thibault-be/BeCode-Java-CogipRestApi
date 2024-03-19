@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.thibault.cogiprestapi.dto.ContactDTO;
 import org.thibault.cogiprestapi.model.Contact;
 import org.thibault.cogiprestapi.services.ContactService;
 
@@ -21,7 +22,7 @@ public class ContactController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/contacts")
-  public List<Contact> getAllContacts() {
+  public List<ContactDTO> getAllContacts() {
     return this.contactService.getAllContacts();
   }
   
