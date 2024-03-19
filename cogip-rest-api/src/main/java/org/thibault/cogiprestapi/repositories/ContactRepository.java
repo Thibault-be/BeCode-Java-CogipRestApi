@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.thibault.cogiprestapi.dto.ContactDTO;
 import org.thibault.cogiprestapi.model.Contact;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,18 @@ public class ContactRepository {
     this.jdbc = jdbc;
   }
   
-  public List<Contact> getAllContacts(){
-    String sql = "SELECT * FROM contact;";
-    return jdbc.query(sql, getContactRowMapper()) ;
+//  public List<Contact> getAllContacts(){
+//    String sql = "SELECT * FROM contact;";
+//    return jdbc.query(sql, getContactRowMapper()) ;
+//  }
+  
+  public List<ContactDTO> getAllContacts(){
+    String sql = "SELECT contact.firstname, contact.lastname, contact.email, contact.phone," +
+            " company.name AS company_name, invoice.invoice_number FROM contact " +
+            "INNER JOIN company ON contact.company_id = company.id " +
+            "INNER JOIN invoice ON contact.company_id = invoice.company_id;";
+    
+    return jdbc.query(sql, getContactDTORowMapper());
   }
   
   public Contact getContactById(int id) throws EmptyResultDataAccessException {
@@ -130,4 +140,13 @@ public class ContactRepository {
     };
     return contactRowMapper;
   }
+  
+  private RowMapper<ContactDTO> getContactDTORowMapper(){
+    RowMapper<ContactDTO> contactDTORowMapper = (ResultSet, i) -> {
+      ContactDTO rowObject = new ContactDTO();
+      
+      rowObject.
+    }
+  }
+  
 }
