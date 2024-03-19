@@ -145,37 +145,6 @@ public class ContactRepository {
     return contactRowMapper;
   }
   
-  private ContactDTO extractContactFromResultSet(ResultSet resultSet) throws SQLException {
-    ContactDTO contact = new ContactDTO();
-    contact.setFirstname(resultSet.getString("firstname"));
-    contact.setLastname(resultSet.getString("lastname"));
-    contact.setEmail(resultSet.getString("email"));
-    contact.setPhone(resultSet.getString("phone"));
-    contact.setCompanyName(resultSet.getString("company_name"));
-    
-    List<Integer> invoices = new ArrayList<>();
-    String companyOriginal = resultSet.getString("company_name");
-    String companyNext = companyOriginal;
-    
-    // Loop to collect invoices for the current company
-    while (companyOriginal.equals(companyNext)){
-      invoices.add(resultSet.getInt("invoice_number"));
-      if (resultSet.next()){
-        companyNext =  resultSet.getString("company_name");
-      } else {
-        companyNext = "";
-      }
-
-      if (!companyOriginal.equals(companyNext)){
-        resultSet.previous();
-      }
-    }
-    contact.setInvoiceNumbers(invoices);
-    return contact;
-  }
-  
-  
-  ///try with prepared statement
   private List<ContactDTO> getListOfContacts(String sql, List<Object> reqParams){
     List<ContactDTO> contacts = new ArrayList<>();
     
@@ -196,27 +165,37 @@ public class ContactRepository {
               } while (rs.next());
             }
     );
-    
     return contacts;
-
   }
-  //end of prepared statement
   
-  
-//  private List<ContactDTO> getListOfContacts(String sql){
-//    List<ContactDTO> contacts = new ArrayList<>();
-//
-//    this.jdbc.query(
-//            connection -> connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY),
-//            rs -> {
-//              do {
-//                ContactDTO contact = extractContactFromResultSet(rs);
-//                contacts.add(contact);
-//              } while (rs.next());
-//            }
-//    );
-//    return contacts;
-//  }
+  private ContactDTO extractContactFromResultSet(ResultSet resultSet) throws SQLException {
+    ContactDTO contact = new ContactDTO();
+    contact.setFirstname(resultSet.getString("firstname"));
+    contact.setLastname(resultSet.getString("lastname"));
+    contact.setEmail(resultSet.getString("email"));
+    contact.setPhone(resultSet.getString("phone"));
+    contact.setCompanyName(resultSet.getString("company_name"));
+    
+    List<Integer> invoices = new ArrayList<>();
+    String companyOriginal = resultSet.getString("company_name");
+    String companyNext = companyOriginal;
+    
+    // Loop to collect invoices for the current company
+    while (companyOriginal.equals(companyNext)){
+      invoices.add(resultSet.getInt("invoice_number"));
+      if (resultSet.next()){
+        companyNext =  resultSet.getString("company_name");
+      } else {
+        companyNext = "";
+      }
+      
+      if (!companyOriginal.equals(companyNext)){
+        resultSet.previous();
+      }
+    }
+    contact.setInvoiceNumbers(invoices);
+    return contact;
+  }
   
   private String getAllContactsString(){
     return "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
