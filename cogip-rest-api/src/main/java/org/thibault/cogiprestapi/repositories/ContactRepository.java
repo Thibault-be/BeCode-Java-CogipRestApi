@@ -69,8 +69,6 @@ public class ContactRepository {
       reqParams.add(companyId);
     }
     sqlBuilder.append(";");
-    System.out.println(sqlBuilder.toString());
-    System.out.println(reqParams);
     return getListOfContacts(sqlBuilder.toString(), reqParams);
   }
   
