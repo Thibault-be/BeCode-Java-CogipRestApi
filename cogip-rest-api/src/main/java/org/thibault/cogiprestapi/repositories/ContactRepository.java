@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.dto.ContactDTO;
 import org.thibault.cogiprestapi.model.Contact;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,29 +23,24 @@ public class ContactRepository {
     this.jdbc = jdbc;
   }
   
-//  public List<Contact> getAllContacts(){
-//    String sql = "SELECT * FROM contact;";
-//    return jdbc.query(sql, getContactRowMapper()) ;
-//  }
-  
-//  public List<ContactDTO> getAllContacts(){
-//    String sql = "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
-//            " company.name AS company_name, invoice.invoice_number FROM contact " +
-//            "INNER JOIN company ON contact.company_id = company.id " +
-//            "INNER JOIN invoice ON contact.company_id = invoice.company_id;";
-//
-//
-//    return jdbc.query(sql, getContactDTORowMapper());
-//  }
+  public List<ContactDTO> getAllContacts() {
+    String sql = getAllContactsString();
+    List<ContactDTO> contacts = new ArrayList<>();
+    
+    List<Object> reqParams = new ArrayList<>();
+    
+    return getListOfContacts(sql, reqParams);
+  }
   
   public Contact getContactById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM contact where id = ?";
     return jdbc.queryForObject(sql, getContactRowMapper(), id);
   }
   
-  public List<Contact> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
+  public List<ContactDTO> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM contact WHERE 1=1");
+    sqlBuilder.append(getAllContactsString());
+    sqlBuilder.append(" WHERE 1=1");
     
     List<Object> reqParams = new ArrayList<>();
     
@@ -72,7 +68,11 @@ public class ContactRepository {
       sqlBuilder.append(" AND company_id= ?");
       reqParams.add(companyId);
     }
-    return this.jdbc.query(sqlBuilder.toString(), getContactRowMapper(),reqParams.toArray());
+    sqlBuilder.append(";");
+    System.out.println(sqlBuilder.toString());
+    System.out.println(reqParams);
+    return getListOfContacts(sqlBuilder.toString(), reqParams);
+    //return this.jdbc.query(sqlBuilder.toString(), getContactRowMapper(),reqParams.toArray());
   }
   
   public Contact addContact(Contact contact){
@@ -145,70 +145,6 @@ public class ContactRepository {
     return contactRowMapper;
   }
   
-  private RowMapper<ContactDTO> getContactDTORowMapper(){
-    RowMapper<ContactDTO> contactDTORowMapper = (ResultSet, i) -> {
-      ContactDTO rowObject = new ContactDTO();
-      
-      List<Integer> invoices = new ArrayList<>();
-      
-      rowObject.setFirstname(ResultSet.getString("firstname"));
-      rowObject.setLastname(ResultSet.getString("lastname"));
-      rowObject.setEmail(ResultSet.getString("email"));
-      rowObject.setPhone(ResultSet.getString("phone"));
-      rowObject.setCompanyName(ResultSet.getString("company_name"));
-      
-      String companyOriginal = ResultSet.getString("company_name");
-      String companyNext = companyOriginal;
-      
-      while (companyOriginal.equals(companyNext)){
-        System.out.println("looping and printing the invoice number from rs: " + ResultSet.getInt("invoice_number"));
-        invoices.add(ResultSet.getInt("invoice_number"));
-        ResultSet.next();
-        companyNext = ResultSet.getString("company_name");
-        System.out.println("Original= " + companyOriginal);
-        System.out.println("Next= " + companyNext);
-      }
-      System.out.println("\n*******************************\nI have broken out of the while loop\n********************************\n");
-      rowObject.setInvoiceNumbers(invoices);
-      
-      return rowObject;
-    };
-    return contactDTORowMapper;
-  }
-  
-//  private List<Integer> getAllInvoices(int id){
-//    String sql = "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
-//            " company.name AS company_name, invoice.invoice_number FROM contact " +
-//            "INNER JOIN company ON contact.company_id = company.id " +
-//            "INNER JOIN invoice ON contact.company_id = invoice.company_id " +
-//            "WHERE company.id= ?";
-//  }
-  
-  
-  
-  public List<ContactDTO> getAllContacts() {
-    String sql = "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
-            " company.name AS company_name, invoice.invoice_number FROM contact " +
-            "INNER JOIN company ON contact.company_id = company.id " +
-            "INNER JOIN invoice ON contact.company_id = invoice.company_id;";
-    
-    List<ContactDTO> contacts = new ArrayList<>();
-    
-    this.jdbc.query(
-            connection -> connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY),
-            rs -> {
-              int count = 0;
-              do {
-                count ++;
-                System.out.println(count);
-                ContactDTO contact = extractContactFromResultSet(rs);
-                contacts.add(contact);
-              } while (rs.next());
-            }
-    );
-    return contacts;
-  }
-  
   private ContactDTO extractContactFromResultSet(ResultSet resultSet) throws SQLException {
     ContactDTO contact = new ContactDTO();
     contact.setFirstname(resultSet.getString("firstname"));
@@ -219,36 +155,73 @@ public class ContactRepository {
     
     List<Integer> invoices = new ArrayList<>();
     String companyOriginal = resultSet.getString("company_name");
-    System.out.println("\n***********************\nOUTSIDE OF LOOP printing original " + companyOriginal);
     String companyNext = companyOriginal;
-    System.out.println("OUTSIDE OF LOOP printing next " + companyNext + "\n***********************\n");
     
     // Loop to collect invoices for the current company
     while (companyOriginal.equals(companyNext)){
-      System.out.println("adding invoice " + resultSet.getInt("invoice_number"));
       invoices.add(resultSet.getInt("invoice_number"));
-      System.out.println("\n************************************************\nInside loop printing next "+companyNext);
       if (resultSet.next()){
         companyNext =  resultSet.getString("company_name");
-        System.out.println("looking at next company name "+ companyNext);
       } else {
         companyNext = "";
       }
-      
-      System.out.println("checking if the same. Original: " + companyOriginal + " - next: " + companyNext);
+
       if (!companyOriginal.equals(companyNext)){
-        System.out.println("going back to previous");
         resultSet.previous();
-        System.out.println(resultSet.getString("company_name"));
       }
     }
-    
     contact.setInvoiceNumbers(invoices);
-    
-    System.out.println("returning the contact");
     return contact;
   }
   
   
+  ///try with prepared statement
+  private List<ContactDTO> getListOfContacts(String sql, List<Object> reqParams){
+    List<ContactDTO> contacts = new ArrayList<>();
+    
+    this.jdbc.query(connection -> {
+              PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+              
+              // Set parameters for the prepared statement
+              int index = 1;
+              for (Object reqParam : reqParams) {
+                preparedStatement.setObject(index++, reqParam);
+              }
+              return preparedStatement;
+            },
+            rs -> {
+              do {
+                ContactDTO contact = extractContactFromResultSet(rs);
+                contacts.add(contact);
+              } while (rs.next());
+            }
+    );
+    
+    return contacts;
+
+  }
+  //end of prepared statement
   
+  
+//  private List<ContactDTO> getListOfContacts(String sql){
+//    List<ContactDTO> contacts = new ArrayList<>();
+//
+//    this.jdbc.query(
+//            connection -> connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY),
+//            rs -> {
+//              do {
+//                ContactDTO contact = extractContactFromResultSet(rs);
+//                contacts.add(contact);
+//              } while (rs.next());
+//            }
+//    );
+//    return contacts;
+//  }
+  
+  private String getAllContactsString(){
+    return "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
+            " company.name AS company_name, invoice.invoice_number FROM contact " +
+            "INNER JOIN company ON contact.company_id = company.id " +
+            "INNER JOIN invoice ON contact.company_id = invoice.company_id";
+  }
 }

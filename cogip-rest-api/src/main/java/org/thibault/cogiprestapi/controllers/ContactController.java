@@ -34,7 +34,7 @@ public class ContactController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/contacts/search")
-  public List<Contact> getContactsByFilters(
+  public List<ContactDTO> getContactsByFilters(
                           @RequestParam (required = false) Integer id,
                           @RequestParam (required = false) String firstname,
                           @RequestParam (required = false) String lastname,
