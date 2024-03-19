@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.thibault.cogiprestapi.dto.InvoiceDTO;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
 import org.thibault.cogiprestapi.enums.InvoiceType;
@@ -21,8 +22,8 @@ public class InvoiceService {
     this.invoiceRepository = invoiceRepository;
   }
   
-  public List<Invoice> getAllInvoices(){
-    List <Invoice> allInvoices = this.invoiceRepository.getAllInvoices();
+  public List<InvoiceDTO> getAllInvoices(){
+    List <InvoiceDTO> allInvoices = this.invoiceRepository.getAllInvoices();
     if (allInvoices.isEmpty()) throw new ResultSetEmptyException("No invoices were found.");
     return allInvoices;
   }

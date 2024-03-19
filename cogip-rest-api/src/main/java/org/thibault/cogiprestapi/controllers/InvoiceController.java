@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.thibault.cogiprestapi.dto.InvoiceDTO;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
 import org.thibault.cogiprestapi.enums.InvoiceType;
@@ -23,7 +24,7 @@ public class InvoiceController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/invoices")
-  public List<Invoice> getAllInvoices(){
+  public List<InvoiceDTO> getAllInvoices(){
     return this.invoiceService.getAllInvoices();
   }
   

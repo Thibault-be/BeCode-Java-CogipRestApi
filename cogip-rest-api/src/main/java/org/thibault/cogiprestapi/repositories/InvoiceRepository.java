@@ -5,11 +5,17 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.thibault.cogiprestapi.dto.InvoiceDTO;
+import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
 import org.thibault.cogiprestapi.enums.InvoiceType;
+import org.thibault.cogiprestapi.enums.converters.EnumConverter;
 import org.thibault.cogiprestapi.model.Invoice;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +28,18 @@ public class InvoiceRepository {
     this.jdbc = jdbc;
   }
   
-  public List<Invoice> getAllInvoices(){
-    String sql = "SELECT * FROM invoice";
-    return jdbc.query(sql, getInvoiceRowMapper());
+  public List<InvoiceDTO> getAllInvoices(){
+    //String sql = "SELECT * FROM invoice";
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append(getAllInvoicesString());
+    sqlBuilder.append(";");
+    
+    List<Object> reqParams = new ArrayList<>();
+    
+    return getListOfInvoices(sqlBuilder.toString(), reqParams);
+    
+    
+    //return jdbc.query(sql, getInvoiceRowMapper());
   }
   
   public Invoice getInvoiceById(int id) throws EmptyResultDataAccessException {
@@ -136,5 +151,60 @@ public class InvoiceRepository {
       return rowObject;
     };
     return invoiceMapper;
+  }
+  
+  
+  private List<InvoiceDTO> getListOfInvoices(String sql, List<Object> reqParams){
+    List<InvoiceDTO> invoices = new ArrayList<>();
+    
+    this.jdbc.query(connection -> {
+      PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+      
+      //set parameters for the prepared statement
+      int index = 1;
+      for (Object reqParam : reqParams){
+        preparedStatement.setObject(index++, reqParam);
+      }
+      return preparedStatement;
+    },
+    rs -> {
+      do{
+        InvoiceDTO invoice = extractInvoiceFromResultSet(rs);
+        invoices.add(invoice);
+      } while (rs.next());
+    }
+  );
+  return invoices;
+  }
+  
+  private InvoiceDTO extractInvoiceFromResultSet(ResultSet resultSet) throws SQLException {
+    InvoiceDTO invoice = new InvoiceDTO();
+    invoice.setInvoiceNumber(resultSet.getInt("invoice_number"));
+    invoice.setValue(resultSet.getBigDecimal("value"));
+    invoice.setCompanyName(resultSet.getString("company"));
+    invoice.setContact(resultSet.getString("contact"));
+    invoice.setTimestamp(resultSet.getTimestamp("created_on"));
+    
+    Currency currency = new EnumConverter().converStringToCurrency(
+            resultSet.getString("currency"));
+    invoice.setCurrency(currency);
+    
+    InvoiceStatus status = new EnumConverter().convertStringToInvoiceStatus(
+            resultSet.getString("status"));
+    invoice.setStatus(status);
+    
+    CompanyType type = new EnumConverter().convertStringToCompanyType(
+            resultSet.getString("type"));
+    invoice.setCompanyType(type);
+    
+    return invoice;
+  }
+  
+  private String getAllInvoicesString(){
+    return "SELECT invoice_number, value, currency, status, company.name as company, company.type," +
+            " concat(contact.firstname, \" \", contact.lastname) as contact, created_on " +
+            "FROM invoice " +
+            "INNER JOIN company on company_id = company.id " +
+            "INNER JOIN contact on contact_id = contact.id";
   }
 }
