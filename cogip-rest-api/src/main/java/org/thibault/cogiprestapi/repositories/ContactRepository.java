@@ -72,7 +72,6 @@ public class ContactRepository {
     System.out.println(sqlBuilder.toString());
     System.out.println(reqParams);
     return getListOfContacts(sqlBuilder.toString(), reqParams);
-    //return this.jdbc.query(sqlBuilder.toString(), getContactRowMapper(),reqParams.toArray());
   }
   
   public Contact addContact(Contact contact){
@@ -177,19 +176,19 @@ public class ContactRepository {
     contact.setCompanyName(resultSet.getString("company_name"));
     
     List<Integer> invoices = new ArrayList<>();
-    String companyOriginal = resultSet.getString("company_name");
-    String companyNext = companyOriginal;
     
-    // Loop to collect invoices for the current company
-    while (companyOriginal.equals(companyNext)){
+    int idCurrent = resultSet.getInt("id");
+    int idNext = idCurrent;
+
+    while (idCurrent == idNext) {
       invoices.add(resultSet.getInt("invoice_number"));
-      if (resultSet.next()){
-        companyNext =  resultSet.getString("company_name");
+      if (resultSet.next()) {
+        idNext = resultSet.getInt("id");
       } else {
-        companyNext = "";
+        idNext = 0;
       }
       
-      if (!companyOriginal.equals(companyNext)){
+      if (idCurrent != idNext) {
         resultSet.previous();
       }
     }
