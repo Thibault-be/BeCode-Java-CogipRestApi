@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.dto.ContactDTO;
 import org.thibault.cogiprestapi.model.Contact;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +27,15 @@ public class ContactRepository {
 //    return jdbc.query(sql, getContactRowMapper()) ;
 //  }
   
-  public List<ContactDTO> getAllContacts(){
-    String sql = "SELECT contact.firstname, contact.lastname, contact.email, contact.phone," +
-            " company.name AS company_name, invoice.invoice_number FROM contact " +
-            "INNER JOIN company ON contact.company_id = company.id " +
-            "INNER JOIN invoice ON contact.company_id = invoice.company_id;";
-    
-    return jdbc.query(sql, getContactDTORowMapper());
-  }
+//  public List<ContactDTO> getAllContacts(){
+//    String sql = "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
+//            " company.name AS company_name, invoice.invoice_number FROM contact " +
+//            "INNER JOIN company ON contact.company_id = company.id " +
+//            "INNER JOIN invoice ON contact.company_id = invoice.company_id;";
+//
+//
+//    return jdbc.query(sql, getContactDTORowMapper());
+//  }
   
   public Contact getContactById(int id) throws EmptyResultDataAccessException {
     String sql = "SELECT * FROM contact where id = ?";
@@ -154,18 +158,97 @@ public class ContactRepository {
       rowObject.setCompanyName(ResultSet.getString("company_name"));
       
       String companyOriginal = ResultSet.getString("company_name");
-      String companyNext = "";
+      String companyNext = companyOriginal;
+      
       while (companyOriginal.equals(companyNext)){
+        System.out.println("looping and printing the invoice number from rs: " + ResultSet.getInt("invoice_number"));
         invoices.add(ResultSet.getInt("invoice_number"));
         ResultSet.next();
         companyNext = ResultSet.getString("company_name");
+        System.out.println("Original= " + companyOriginal);
+        System.out.println("Next= " + companyNext);
       }
-      
+      System.out.println("\n*******************************\nI have broken out of the while loop\n********************************\n");
       rowObject.setInvoiceNumbers(invoices);
       
       return rowObject;
     };
     return contactDTORowMapper;
   }
+  
+//  private List<Integer> getAllInvoices(int id){
+//    String sql = "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
+//            " company.name AS company_name, invoice.invoice_number FROM contact " +
+//            "INNER JOIN company ON contact.company_id = company.id " +
+//            "INNER JOIN invoice ON contact.company_id = invoice.company_id " +
+//            "WHERE company.id= ?";
+//  }
+  
+  
+  
+  public List<ContactDTO> getAllContacts() {
+    String sql = "SELECT contact.id, contact.firstname, contact.lastname, contact.email, contact.phone," +
+            " company.name AS company_name, invoice.invoice_number FROM contact " +
+            "INNER JOIN company ON contact.company_id = company.id " +
+            "INNER JOIN invoice ON contact.company_id = invoice.company_id;";
+    
+    List<ContactDTO> contacts = new ArrayList<>();
+    
+    this.jdbc.query(
+            connection -> connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY),
+            rs -> {
+              int count = 0;
+              do {
+                count ++;
+                System.out.println(count);
+                ContactDTO contact = extractContactFromResultSet(rs);
+                contacts.add(contact);
+              } while (rs.next());
+            }
+    );
+    return contacts;
+  }
+  
+  private ContactDTO extractContactFromResultSet(ResultSet resultSet) throws SQLException {
+    ContactDTO contact = new ContactDTO();
+    contact.setFirstname(resultSet.getString("firstname"));
+    contact.setLastname(resultSet.getString("lastname"));
+    contact.setEmail(resultSet.getString("email"));
+    contact.setPhone(resultSet.getString("phone"));
+    contact.setCompanyName(resultSet.getString("company_name"));
+    
+    List<Integer> invoices = new ArrayList<>();
+    String companyOriginal = resultSet.getString("company_name");
+    System.out.println("\n***********************\nOUTSIDE OF LOOP printing original " + companyOriginal);
+    String companyNext = companyOriginal;
+    System.out.println("OUTSIDE OF LOOP printing next " + companyNext + "\n***********************\n");
+    
+    // Loop to collect invoices for the current company
+    while (companyOriginal.equals(companyNext)){
+      System.out.println("adding invoice " + resultSet.getInt("invoice_number"));
+      invoices.add(resultSet.getInt("invoice_number"));
+      System.out.println("\n************************************************\nInside loop printing next "+companyNext);
+      if (resultSet.next()){
+        companyNext =  resultSet.getString("company_name");
+        System.out.println("looking at next company name "+ companyNext);
+      } else {
+        companyNext = "";
+      }
+      
+      System.out.println("checking if the same. Original: " + companyOriginal + " - next: " + companyNext);
+      if (!companyOriginal.equals(companyNext)){
+        System.out.println("going back to previous");
+        resultSet.previous();
+        System.out.println(resultSet.getString("company_name"));
+      }
+    }
+    
+    contact.setInvoiceNumbers(invoices);
+    
+    System.out.println("returning the contact");
+    return contact;
+  }
+  
+  
   
 }
