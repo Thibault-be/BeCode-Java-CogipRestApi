@@ -26,12 +26,14 @@ public class CompanyRepository {
   
   public List<CompanyDTO> getAllCompanies(){
     //String sql = "SELECT * FROM company;";
-    String sql = getAllCompaniesString();
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append(getAllCompaniesString());
+    sqlBuilder.append(" ORDER BY id");
     //return jdbc.query(sql, getCompanyRowMapper());
     
     List<Object> reqParams = new ArrayList<>();
     
-    return getListOfCompanies(sql, reqParams);
+    return getListOfCompanies(sqlBuilder.toString(), reqParams);
   }
   
   public Company getCompanyById(int id) throws EmptyResultDataAccessException {
@@ -39,34 +41,40 @@ public class CompanyRepository {
     return jdbc.queryForObject(sql, getCompanyRowMapper(), id);
   }
   
-  public List<Company> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
-    
-    List<Object> paramsArray = new ArrayList<>();
+  public List<CompanyDTO> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
     
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM company WHERE 1=1");
+    sqlBuilder.append(getAllCompaniesString());
+    sqlBuilder.append(" WHERE 1=1");
+    
+    List<Object> reqParams = new ArrayList<>();
     
     if (id != null){
       sqlBuilder.append(" AND id = ?");
-      paramsArray.add(id);
+      reqParams.add(id);
     }
     if (name != null && !name.isEmpty()){
       sqlBuilder.append(" AND name = ?");
-      paramsArray.add(name);
+      reqParams.add(name);
     }
     if (country != null && !country.isEmpty()){
       sqlBuilder.append(" AND country = ?");
-      paramsArray.add(country);
+      reqParams.add(country);
     }
     if (vat != null && !vat.isEmpty()){
       sqlBuilder.append(" AND vat = ?");
-      paramsArray.add(vat);
+      reqParams.add(vat);
     }
     if (type != null){
       sqlBuilder.append(" AND type = ? ");
-      paramsArray.add(type.name());
+      reqParams.add(type.name());
     }
-    return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
+    
+    sqlBuilder.append(" ORDER BY id;");
+    
+    return getListOfCompanies(sqlBuilder.toString(), reqParams);
+    
+    //return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
   
   public Company addCompany(Company company) throws DuplicateKeyException {

@@ -33,8 +33,8 @@ public class CompanyService {
     }
   }
   
-  public List<Company> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
-    List<Company> filteredCompanies = this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
+  public List<CompanyDTO> searchCompaniesByFilters(Integer id, String name, String country, String vat, CompanyType type){
+    List<CompanyDTO> filteredCompanies = this.companyRepository.searchCompaniesByFilters(id, name, country, vat, type);
     if (filteredCompanies.isEmpty()) throw new ResultSetEmptyException("No companies for your filters were found.");
     return filteredCompanies;
   }
