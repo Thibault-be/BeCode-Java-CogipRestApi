@@ -4,6 +4,7 @@ import java.util.List;
 
 public class CompanyDTO {
   
+  private Integer id;
   private String name;
   private String country;
   private String vat;
@@ -11,6 +12,14 @@ public class CompanyDTO {
   private List<String> contacts;
   
   public CompanyDTO(){}
+  
+  public Integer getId(){
+    return this.id;
+  }
+  
+  public void setId(Integer id){
+    this.id = id;
+  }
   
   public String getName() {
     return name;

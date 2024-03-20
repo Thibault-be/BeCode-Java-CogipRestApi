@@ -171,6 +171,7 @@ public class CompanyRepository {
     List<Integer> invoices = new ArrayList<>();
     List<String> contacts = new ArrayList<>();
     
+    company.setId(resultSet.getInt("id"));
     company.setName(resultSet.getString("name"));
     company.setCountry(resultSet.getString("country"));
     company.setVat(resultSet.getString("vat"));
