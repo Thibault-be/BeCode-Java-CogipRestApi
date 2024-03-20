@@ -36,7 +36,7 @@ public class InvoiceController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT', 'ROLE_INTERN')")
   @GetMapping ("/invoices/search")
-  public List<Invoice> searchInvoicesByFilters(
+  public List<InvoiceDTO> searchInvoicesByFilters(
           @RequestParam (required = false) Integer id,
           @RequestParam (required = false) Integer companyId,
           @RequestParam (required = false) String invoiceNumber,

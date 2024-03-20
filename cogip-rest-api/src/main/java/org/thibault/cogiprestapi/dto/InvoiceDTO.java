@@ -3,7 +3,6 @@ package org.thibault.cogiprestapi.dto;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 

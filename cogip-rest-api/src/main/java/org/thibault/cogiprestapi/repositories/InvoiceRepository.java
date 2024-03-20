@@ -29,17 +29,11 @@ public class InvoiceRepository {
   }
   
   public List<InvoiceDTO> getAllInvoices(){
-    //String sql = "SELECT * FROM invoice";
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append(getAllInvoicesString());
     sqlBuilder.append(";");
-    
     List<Object> reqParams = new ArrayList<>();
-    
     return getListOfInvoices(sqlBuilder.toString(), reqParams);
-    
-    
-    //return jdbc.query(sql, getInvoiceRowMapper());
   }
   
   public Invoice getInvoiceById(int id) throws EmptyResultDataAccessException {
@@ -47,9 +41,10 @@ public class InvoiceRepository {
     return jdbc.queryForObject(sql, getInvoiceRowMapper(),id);
   }
   
-  public List<Invoice> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status){
+  public List<InvoiceDTO> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status){
     StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT * FROM invoice WHERE 1=1");
+    sqlBuilder.append(getAllInvoicesString());
+    sqlBuilder.append(" WHERE 1=1");
     
     List<Object> reqParams = new ArrayList<>();
     
@@ -77,7 +72,7 @@ public class InvoiceRepository {
       sqlBuilder.append(" AND status = ?");
       reqParams.add(status.name());
     }
-    return jdbc.query(sqlBuilder.toString(), getInvoiceRowMapper(), reqParams.toArray());
+    return getListOfInvoices(sqlBuilder.toString(), reqParams);
   }
   
   public Invoice addInvoice(Invoice invoice) throws DataIntegrityViolationException {
@@ -152,7 +147,6 @@ public class InvoiceRepository {
     };
     return invoiceMapper;
   }
-  
   
   private List<InvoiceDTO> getListOfInvoices(String sql, List<Object> reqParams){
     List<InvoiceDTO> invoices = new ArrayList<>();

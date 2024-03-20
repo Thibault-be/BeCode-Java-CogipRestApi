@@ -26,9 +26,7 @@ public class ContactRepository {
   public List<ContactDTO> getAllContacts() {
     String sql = getAllContactsString();
     List<ContactDTO> contacts = new ArrayList<>();
-    
     List<Object> reqParams = new ArrayList<>();
-    
     return getListOfContacts(sql, reqParams);
   }
   
