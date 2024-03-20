@@ -165,6 +165,7 @@ public class ContactRepository {
   
   private ContactDTO extractContactFromResultSet(ResultSet resultSet) throws SQLException {
     ContactDTO contact = new ContactDTO();
+    contact.setId(resultSet.getInt("id"));
     contact.setFirstname(resultSet.getString("firstname"));
     contact.setLastname(resultSet.getString("lastname"));
     contact.setEmail(resultSet.getString("email"));

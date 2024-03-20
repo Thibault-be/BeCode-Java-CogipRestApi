@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ContactDTO {
   
+  private Integer id;
   private String firstname;
   private String lastname;
   private String email;
@@ -13,13 +14,21 @@ public class ContactDTO {
   
   public ContactDTO(){}
   
-  public ContactDTO(String firstname, String lastname, String email, String phone, String companyName, List<Integer> invoiceNumber) {
+  public ContactDTO(String firstname, String lastname, String email, String phone, String companyName, List<Integer> invoiceNumbers) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
     this.phone = phone;
     this.companyName = companyName;
-    this.invoiceNumbers = invoiceNumber;
+    this.invoiceNumbers = invoiceNumbers;
+  }
+  
+  public Integer getId() {
+    return id;
+  }
+  
+  public void setId(Integer id) {
+    this.id = id;
   }
   
   public String getFirstname() {
