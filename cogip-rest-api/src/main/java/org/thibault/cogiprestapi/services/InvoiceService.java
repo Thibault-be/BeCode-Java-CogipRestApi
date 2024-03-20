@@ -36,8 +36,8 @@ public class InvoiceService {
     }
   }
   
-  public List<InvoiceDTO> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status){
-    List<InvoiceDTO> filteredInvoices = this.invoiceRepository.searchInvoicesByFilters(id, companyId, invoiceNumber, currency, type, status);
+  public List<InvoiceDTO> searchInvoicesByFilters(Integer id, String companyName, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status, String contactName){
+    List<InvoiceDTO> filteredInvoices = this.invoiceRepository.searchInvoicesByFilters(id, companyName, invoiceNumber, currency, type, status, contactName);
     if (filteredInvoices.isEmpty()) throw new ResultSetEmptyException("No invoices were found for your filters.");
     return filteredInvoices;
   }

@@ -3,6 +3,8 @@ package org.thibault.cogiprestapi.dto;
 import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
+import org.thibault.cogiprestapi.enums.InvoiceType;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -13,7 +15,7 @@ public class InvoiceDTO {
   private Currency currency;
   private InvoiceStatus status;
   private String companyName;
-  private CompanyType companyType;
+  private InvoiceType invoiceType;
   private String contact;
   private Timestamp timestamp;
   
@@ -59,12 +61,12 @@ public class InvoiceDTO {
     this.companyName = companyName;
   }
   
-  public CompanyType getCompanyType() {
-    return companyType;
+  public InvoiceType getInvoiceType() {
+    return invoiceType;
   }
   
-  public void setCompanyType(CompanyType companyType) {
-    this.companyType = companyType;
+  public void setInvoiceType(InvoiceType invoiceType) {
+    this.invoiceType = invoiceType;
   }
   
   public String getContact() {

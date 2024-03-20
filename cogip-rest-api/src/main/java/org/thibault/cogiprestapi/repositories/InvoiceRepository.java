@@ -33,6 +33,7 @@ public class InvoiceRepository {
     sqlBuilder.append(getAllInvoicesString());
     sqlBuilder.append(";");
     List<Object> reqParams = new ArrayList<>();
+    
     return getListOfInvoices(sqlBuilder.toString(), reqParams);
   }
   
@@ -41,7 +42,7 @@ public class InvoiceRepository {
     return jdbc.queryForObject(sql, getInvoiceRowMapper(),id);
   }
   
-  public List<InvoiceDTO> searchInvoicesByFilters(Integer id, Integer companyId, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status){
+  public List<InvoiceDTO> searchInvoicesByFilters(Integer id, String companyName, String invoiceNumber, Currency currency, InvoiceType type, InvoiceStatus status, String contactName){
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append(getAllInvoicesString());
     sqlBuilder.append(" WHERE 1=1");
@@ -52,9 +53,9 @@ public class InvoiceRepository {
       sqlBuilder.append(" AND id = ?");
       reqParams.add(id);
     }
-    if (companyId != null){
-      sqlBuilder.append(" AND company_id = ?");
-      reqParams.add(companyId);
+    if (companyName != null && !companyName.isEmpty()){
+      sqlBuilder.append(" AND company.name = ?");
+      reqParams.add(companyName);
     }
     if (invoiceNumber != null && !invoiceNumber.isEmpty()){
       sqlBuilder.append(" AND invoice_number = ?");
@@ -65,13 +66,18 @@ public class InvoiceRepository {
       reqParams.add(currency.name());
     }
     if (type != null){
-      sqlBuilder.append(" AND type = ?");
+      sqlBuilder.append(" AND invoice.type = ?");
       reqParams.add(type.name());
     }
     if (status != null){
       sqlBuilder.append(" AND status = ?");
       reqParams.add(status.name());
     }
+    if (contactName != null && !contactName.isEmpty()){
+      sqlBuilder.append(" AND contact = ?");
+      reqParams.add(contactName);
+    }
+    
     return getListOfInvoices(sqlBuilder.toString(), reqParams);
   }
   
@@ -187,15 +193,15 @@ public class InvoiceRepository {
             resultSet.getString("status"));
     invoice.setStatus(status);
     
-    CompanyType type = new EnumConverter().convertStringToCompanyType(
-            resultSet.getString("type"));
-    invoice.setCompanyType(type);
+    InvoiceType type = new EnumConverter().convertStringToInvoiceType(
+            resultSet.getString("invoice_type"));
+    invoice.setInvoiceType(type);
     
     return invoice;
   }
   
   private String getAllInvoicesString(){
-    return "SELECT invoice_number, value, currency, status, company.name as company, company.type," +
+    return "SELECT invoice_number, value, currency, status, company.name as company, invoice.type as invoice_type," +
             " concat(contact.firstname, \" \", contact.lastname) as contact, created_on " +
             "FROM invoice " +
             "INNER JOIN company on company_id = company.id " +
