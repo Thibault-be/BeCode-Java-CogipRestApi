@@ -26,11 +26,9 @@ public class CompanyRepository {
   }
   
   public List<CompanyDTO> getAllCompanies(){
-    //String sql = "SELECT * FROM company;";
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append(getAllCompaniesString());
     sqlBuilder.append(" ORDER BY id");
-    //return jdbc.query(sql, getCompanyRowMapper());
     
     List<Object> reqParams = new ArrayList<>();
     
@@ -67,15 +65,13 @@ public class CompanyRepository {
       reqParams.add(vat);
     }
     if (type != null){
-      sqlBuilder.append(" AND type = ? ");
+      sqlBuilder.append(" AND company.type = ? ");
       reqParams.add(type.name());
     }
     
     sqlBuilder.append(" ORDER BY id;");
-    
+ 
     return getListOfCompanies(sqlBuilder.toString(), reqParams);
-    
-    //return jdbc.query(sqlBuilder.toString(), getCompanyRowMapper(), paramsArray.toArray());
   }
   
   public Company addCompany(Company company) throws DuplicateKeyException {
@@ -181,11 +177,16 @@ public class CompanyRepository {
     int idNext = idCurrent;
     
     while (idCurrent == idNext){
-      invoices.add(resultSet.getInt("invoice_number"));
+      Integer invoiceNumber = resultSet.getInt("invoice_number");
+      if (!resultSet.wasNull()) invoices.add(invoiceNumber);
       
-      if (!contacts.contains(resultSet.getString("contact"))){
-        contacts.add(resultSet.getString("contact"));
+      String contact = resultSet.getString("contact");
+      if (!resultSet.wasNull()){
+        if (!contacts.contains(resultSet.getString("contact"))){
+          contacts.add(resultSet.getString("contact"));
+        }
       }
+
       if (resultSet.next()){
         idNext = resultSet.getInt("id");
       }else{
@@ -206,12 +207,9 @@ public class CompanyRepository {
     return company;
   }
   
-  
   private String getAllCompaniesString(){
     return "SELECT company.id, name, country, vat, company.type, invoice_number, concat(firstname, ' ', lastname) as contact FROM company " +
-            "INNER JOIN invoice ON company.id = invoice.company_id " +
-            "INNER JOIN contact ON company.id = contact.company_id";
+            "LEFT JOIN invoice ON company.id = invoice.company_id " +
+            "LEFT JOIN contact ON company.id = contact.company_id";
   }
-  
-  
 }
