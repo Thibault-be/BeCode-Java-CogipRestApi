@@ -36,7 +36,7 @@ public class CompanyRepository {
   }
   
   public Company getCompanyById(int id) throws EmptyResultDataAccessException {
-    String sql = "SELECT * FROM company WHERE id= ?;";
+    String sql = "SELECT * FROM company WHERE company.id= ?;";
     return jdbc.queryForObject(sql, getCompanyRowMapper(), id);
   }
   
@@ -49,7 +49,7 @@ public class CompanyRepository {
     List<Object> reqParams = new ArrayList<>();
     
     if (id != null){
-      sqlBuilder.append(" AND id = ?");
+      sqlBuilder.append(" AND company.id = ?");
       reqParams.add(id);
     }
     if (name != null && !name.isEmpty()){
@@ -94,7 +94,7 @@ public class CompanyRepository {
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append("UPDATE company");
     sqlBuilder.append(" SET name= ? , country= ?, vat= ?, type= ?");
-    sqlBuilder.append(" WHERE id = ?");
+    sqlBuilder.append(" WHERE company.id = ?");
     
     Company oldCompanyData = getCompanyById(id);
     
@@ -115,7 +115,7 @@ public class CompanyRepository {
             type.name(),
             id);
     
-    String returnSql = "SELECT * FROM company where id = ?";
+    String returnSql = "SELECT * FROM company WHERE company.id = ?";
     return jdbc.query(returnSql, getCompanyRowMapper(), id).get(0);
   }
   

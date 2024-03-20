@@ -76,7 +76,6 @@ public class CompanyService {
       flag = true;
     }
     if (company.getType() == null){
-      System.out.println("checking type");
       params.append("type");
       flag = true;
     }
