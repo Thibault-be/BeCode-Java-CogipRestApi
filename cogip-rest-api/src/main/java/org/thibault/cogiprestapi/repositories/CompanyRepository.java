@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.dto.CompanyDTO;
 import org.thibault.cogiprestapi.enums.CompanyType;
+import org.thibault.cogiprestapi.enums.converters.EnumConverter;
 import org.thibault.cogiprestapi.model.Company;
 
 import java.sql.PreparedStatement;
@@ -195,6 +196,10 @@ public class CompanyRepository {
         resultSet.previous();
       }
     }
+    
+    CompanyType companyType = new EnumConverter().convertStringToCompanyType(resultSet.getString("type"));
+    company.setType(companyType);
+    
     company.setInvoices(invoices);
     company.setContacts(contacts);
     

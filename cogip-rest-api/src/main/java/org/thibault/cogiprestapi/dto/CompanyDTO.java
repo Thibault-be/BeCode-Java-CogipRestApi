@@ -1,5 +1,7 @@
 package org.thibault.cogiprestapi.dto;
 
+import org.thibault.cogiprestapi.enums.CompanyType;
+
 import java.util.List;
 
 public class CompanyDTO {
@@ -8,6 +10,7 @@ public class CompanyDTO {
   private String name;
   private String country;
   private String vat;
+  private CompanyType type;
   private List<Integer> invoices;
   private List<String> contacts;
   
@@ -59,5 +62,13 @@ public class CompanyDTO {
   
   public void setContacts(List<String> contacts) {
     this.contacts = contacts;
+  }
+  
+  public CompanyType getType() {
+    return type;
+  }
+  
+  public void setType(CompanyType type) {
+    this.type = type;
   }
 }
