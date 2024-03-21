@@ -35,10 +35,12 @@ public class ContactRepository {
     return jdbc.queryForObject(sql, getContactRowMapper(), id);
   }
   
-  public List<ContactDTO> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
+  public List<ContactDTO> getContactsByFilters(Integer id, String firstname, String lastname, String phone, String companyName){
     StringBuilder sqlBuilder = new StringBuilder();
     sqlBuilder.append(getAllContactsString());
     sqlBuilder.append(" WHERE 1=1");
+    
+    System.out.println(companyName);
     
     List<Object> reqParams = new ArrayList<>();
     
@@ -62,9 +64,9 @@ public class ContactRepository {
       reqParams.add(phone);
     }
     
-    if (companyId != null){
-      sqlBuilder.append(" AND company_id= ?");
-      reqParams.add(companyId);
+    if (companyName != null){
+      sqlBuilder.append(" AND company.name = ?");
+      reqParams.add(companyName);
     }
     sqlBuilder.append(";");
     return getListOfContacts(sqlBuilder.toString(), reqParams);
@@ -142,6 +144,8 @@ public class ContactRepository {
   
   private List<ContactDTO> getListOfContacts(String sql, List<Object> reqParams){
     List<ContactDTO> contacts = new ArrayList<>();
+    
+    System.out.println(sql);
     
     this.jdbc.query(connection -> {
               PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

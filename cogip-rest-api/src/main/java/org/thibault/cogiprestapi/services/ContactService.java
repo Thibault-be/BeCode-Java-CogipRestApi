@@ -36,8 +36,8 @@ public class ContactService {
     }
   }
   
-  public List<ContactDTO> getContactsByFilters(Integer id, String firstname, String lastname, String phone, Integer companyId){
-    List<ContactDTO> filteredContacts = this.contactRepository.getContactsByFilters(id, firstname, lastname, phone, companyId);
+  public List<ContactDTO> getContactsByFilters(Integer id, String firstname, String lastname, String phone, String companyName){
+    List<ContactDTO> filteredContacts = this.contactRepository.getContactsByFilters(id, firstname, lastname, phone, companyName);
     if (filteredContacts.isEmpty()) {
       throw new ResultSetEmptyException("No contacts found for the selected filters.");
     }
