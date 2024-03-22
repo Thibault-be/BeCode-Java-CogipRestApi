@@ -55,7 +55,6 @@ public class UserController {
               UserDTO mappedUser = mapUserToDTO(user);
               userDTOs.add(mappedUser);
             });
-    if (userDTOs.isEmpty()) throw new ResultSetEmptyException("No matches for your search criteria.");
     return userDTOs;
   }
   
@@ -114,4 +113,5 @@ public class UserController {
     }
     throw new IllegalParametersException("Please enter a valid role. Options: admin, accountant or intern.");
   }
+  
 }

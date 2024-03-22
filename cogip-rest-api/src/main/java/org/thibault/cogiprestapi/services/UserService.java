@@ -43,7 +43,9 @@ public class UserService {
   }
   
   public List<User> getUsersByFilters(Integer id, String username, UserRole role){
-    return this.userRepository.getUsersByFilters(id, username, role);
+    List<User> filteredUsers = userRepository.getUsersByFilters(id, username, role);
+    if (filteredUsers.isEmpty()) throw new ResultSetEmptyException("No matches for your search criteria.");
+    return filteredUsers;
   }
   
   public User addUser(CreateUserDTO createUserDTO){
