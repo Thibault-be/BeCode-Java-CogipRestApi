@@ -16,6 +16,15 @@ public class CompanyDTO {
   
   public CompanyDTO(){}
   
+  public CompanyDTO(String name, String country, String vat, CompanyType type, List<Integer> invoices, List<String> contacts) {
+    this.name = name;
+    this.country = country;
+    this.vat = vat;
+    this.type = type;
+    this.invoices = invoices;
+    this.contacts = contacts;
+  }
+  
   public Integer getId(){
     return this.id;
   }

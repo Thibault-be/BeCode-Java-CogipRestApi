@@ -42,7 +42,6 @@ public class UserRepositoryTest {
     }
   }
   
-  
   private RowMapper<User> getUserRowMapper(){
     RowMapper<User> userRowMapper = (resultSet, i) -> {
       
