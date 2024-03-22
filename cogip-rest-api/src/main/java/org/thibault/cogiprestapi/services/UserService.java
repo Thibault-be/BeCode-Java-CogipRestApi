@@ -80,11 +80,12 @@ public class UserService {
     try{
       this.userRepository.deleteUser(id);
     } catch (EmptyResultDataAccessException ex){
+      System.out.println("catching");
       throw new IdNotFoundException("The user with id " + id + " could not be found and could not be deleted.");
     }
   }
   
-  private String parametersMissing(CreateUserDTO user){
+  String parametersMissing(CreateUserDTO user){
     StringBuilder missingParams = new StringBuilder("These are the missing parameters:\n");
     boolean flag = false;
     
