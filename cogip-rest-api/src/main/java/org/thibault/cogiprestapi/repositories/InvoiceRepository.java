@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.thibault.cogiprestapi.dto.InvoiceDTO;
-import org.thibault.cogiprestapi.enums.CompanyType;
 import org.thibault.cogiprestapi.enums.Currency;
 import org.thibault.cogiprestapi.enums.InvoiceStatus;
 import org.thibault.cogiprestapi.enums.InvoiceType;

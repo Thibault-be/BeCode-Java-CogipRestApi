@@ -40,8 +40,6 @@ public class ContactRepository {
     sqlBuilder.append(getAllContactsString());
     sqlBuilder.append(" WHERE 1=1");
     
-    System.out.println(companyName);
-    
     List<Object> reqParams = new ArrayList<>();
     
     if (id != null){
@@ -144,9 +142,6 @@ public class ContactRepository {
   
   private List<ContactDTO> getListOfContacts(String sql, List<Object> reqParams){
     List<ContactDTO> contacts = new ArrayList<>();
-    
-    System.out.println(sql);
-    
     this.jdbc.query(connection -> {
               PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
               

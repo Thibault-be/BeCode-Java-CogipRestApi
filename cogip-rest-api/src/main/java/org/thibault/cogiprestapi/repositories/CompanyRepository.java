@@ -179,20 +179,17 @@ public class CompanyRepository {
     while (idCurrent == idNext){
       Integer invoiceNumber = resultSet.getInt("invoice_number");
       if (!resultSet.wasNull()) invoices.add(invoiceNumber);
-      
       String contact = resultSet.getString("contact");
       if (!resultSet.wasNull()){
         if (!contacts.contains(resultSet.getString("contact"))){
           contacts.add(resultSet.getString("contact"));
         }
       }
-
       if (resultSet.next()){
         idNext = resultSet.getInt("id");
       }else{
         idNext = 0;
       }
-      
       if (idCurrent != idNext){
         resultSet.previous();
       }
@@ -200,10 +197,8 @@ public class CompanyRepository {
     
     CompanyType companyType = new EnumConverter().convertStringToCompanyType(resultSet.getString("type"));
     company.setType(companyType);
-    
     company.setInvoices(invoices);
     company.setContacts(contacts);
-    
     return company;
   }
   
