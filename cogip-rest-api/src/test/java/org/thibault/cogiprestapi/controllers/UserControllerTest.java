@@ -8,10 +8,13 @@ import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.model.User;
 import org.thibault.cogiprestapi.services.UserService;
+
 import java.util.Arrays;
 import java.util.List;
-import static org.mockito.Mockito.*;
-import static org.mockito.BDDMockito.*;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class UserControllerTest {
   

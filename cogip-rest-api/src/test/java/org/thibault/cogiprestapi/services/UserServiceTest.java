@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.verify;
 
 public class UserServiceTest {
   

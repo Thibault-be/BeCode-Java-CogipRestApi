@@ -68,5 +68,4 @@ public class InvoiceServiceTest {
       invoiceService.updateInvoice(id, invoice);
     });
   }
-  
 }

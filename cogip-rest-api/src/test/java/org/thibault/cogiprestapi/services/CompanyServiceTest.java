@@ -1,7 +1,6 @@
 package org.thibault.cogiprestapi.services;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,10 +15,14 @@ import org.thibault.cogiprestapi.exceptions.ParametersMissingException;
 import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.model.Company;
 import org.thibault.cogiprestapi.repositories.CompanyRepository;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import static org.mockito.Mockito.*;
-import static org.mockito.BDDMockito.*;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class CompanyServiceTest {

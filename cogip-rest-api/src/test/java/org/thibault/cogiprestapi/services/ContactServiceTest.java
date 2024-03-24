@@ -6,15 +6,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.thibault.cogiprestapi.dto.ContactDTO;
 import org.thibault.cogiprestapi.exceptions.IdNotFoundException;
 import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
 import org.thibault.cogiprestapi.repositories.ContactRepository;
+
 import java.util.Collections;
 
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class ContactServiceTest {
@@ -51,6 +50,4 @@ public class ContactServiceTest {
             contactService.getContactsByFilters(null, lastname, null, null, null);
     });
   }
-  
-  
 }
