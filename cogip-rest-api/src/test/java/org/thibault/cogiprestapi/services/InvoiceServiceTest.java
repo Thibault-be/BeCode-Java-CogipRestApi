@@ -4,31 +4,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.thibault.cogiprestapi.enums.Currency;
-import org.thibault.cogiprestapi.enums.InvoiceStatus;
-import org.thibault.cogiprestapi.enums.InvoiceType;
 import org.thibault.cogiprestapi.exceptions.*;
 import org.thibault.cogiprestapi.model.Invoice;
 import org.thibault.cogiprestapi.repositories.InvoiceRepository;
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.thibault.cogiprestapi.dto.CompanyDTO;
-import org.thibault.cogiprestapi.enums.CompanyType;
-import org.thibault.cogiprestapi.model.Company;
-import org.thibault.cogiprestapi.repositories.CompanyRepository;
-
-import java.math.BigDecimal;
 import java.util.*;
-import java.util.List;
-import static org.mockito.Mockito.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,15 +58,15 @@ public class InvoiceServiceTest {
   }
   
   @Test
-  void invoiceWithIllegalParametersException(){
-    Invoice invoice = new Invoice(null, 2,2,"456", new BigDecimal("1000.00"), Currency.USD, InvoiceType.INCOMING, InvoiceStatus.OPEN);
+  void updateInvoiceToExistingInvoiceNumberThrowsDuplicateValueException(){
+    int id = 5;
+    Invoice invoice = new Invoice();
     
-    given(invoiceRepository.addInvoice(new Invoice())).willThrow(DataIntegrityViolationException.class);
+    given(invoiceRepository.updateInvoice(id,invoice)).willThrow(DuplicateKeyException.class);
     
-    assertThrows(IllegalParametersException.class, () -> {
-      invoiceService.addInvoice(invoice);
+    assertThrows(DuplicateValueException.class, () ->{
+      invoiceService.updateInvoice(id, invoice);
     });
   }
-  
   
 }
