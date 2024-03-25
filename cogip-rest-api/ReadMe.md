@@ -1,4 +1,4 @@
-# The COGIP Microservice Architecture Challenge
+# The COGIP Microservice Architecture Challenge - REST API
 
 This challenge encompasses weeks 6 to 10 from the BeCode Java track training.
 The idea is to create a REST API and non-interactive CLI for an imaginary company named Cogip.
@@ -7,10 +7,11 @@ This is by no means a production ready piece of software, but was designed to le
 
 ## Features
 
-The REST API connects to e MySQL database with information from and about the company.
+The REST API connects to a MySQL database with information from and about the company.
 Existing tables are User, Company, Contact and Invoices.
 
 CRUD operations and endpoints were implemented for all tables.
+Users have an admin, accountant or intern role. Certain endpoints are not available for accountants or interns.
 
 ## Development
 
