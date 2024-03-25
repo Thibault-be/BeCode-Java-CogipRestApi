@@ -67,6 +67,7 @@ public class ContactController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ACCOUNTANT')")
   @DeleteMapping("/contacts/{id}")
   public ResponseEntity<String> deleteContact(@PathVariable int id){
+    System.out.println("in the controller");
     this.contactService.deleteContact(id);
     
     return ResponseEntity

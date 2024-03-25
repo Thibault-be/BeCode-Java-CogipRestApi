@@ -49,7 +49,7 @@ public class InvoiceRepository {
     List<Object> reqParams = new ArrayList<>();
     
     if (id != null){
-      sqlBuilder.append(" AND id = ?");
+      sqlBuilder.append(" AND invoice.id = ?");
       reqParams.add(id);
     }
     if (companyName != null && !companyName.isEmpty()){
