@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 
 class UserControllerTest {
   
+  
   @Test
   @DisplayName("Verifies if userService.getAllUsers is called")
   void getAllUsersHappyFlow(){

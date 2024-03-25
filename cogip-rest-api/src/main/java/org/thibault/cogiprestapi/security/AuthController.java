@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.repositories.UserRepository;
@@ -45,12 +46,12 @@ public class AuthController {
   
   @PostMapping("/login")
   public ResponseEntity<AuthResponseDTO> login(@RequestBody UserCredentials credentials) {
-    
     Authentication authentication = authenticationManager
             .authenticate(new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
     
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String token = this.jwtGenerator.generateToken(authentication);
+    
     return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
   }
 }
