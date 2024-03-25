@@ -50,6 +50,4 @@ public class ControllerAdvice {
   public String handleHttpMessageNotReadableException (HttpMessageNotReadableException httpMessageNotReadableException){
     return "http not readable";
   }
-
-  
 }

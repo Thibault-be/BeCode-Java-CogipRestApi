@@ -70,7 +70,6 @@ public class CompanyRepository {
     }
     
     sqlBuilder.append(" ORDER BY id;");
- 
     return getListOfCompanies(sqlBuilder.toString(), reqParams);
   }
   

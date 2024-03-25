@@ -8,9 +8,9 @@ import org.thibault.cogiprestapi.dto.CreateUserDTO;
 import org.thibault.cogiprestapi.dto.UserDTO;
 import org.thibault.cogiprestapi.enums.UserRole;
 import org.thibault.cogiprestapi.exceptions.IllegalParametersException;
-import org.thibault.cogiprestapi.exceptions.ResultSetEmptyException;
-import org.thibault.cogiprestapi.services.UserService;
 import org.thibault.cogiprestapi.model.User;
+import org.thibault.cogiprestapi.services.UserService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,5 +113,4 @@ public class UserController {
     }
     throw new IllegalParametersException("Please enter a valid role. Options: admin, accountant or intern.");
   }
-  
 }
